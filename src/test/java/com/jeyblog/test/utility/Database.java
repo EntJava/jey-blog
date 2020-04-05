@@ -33,7 +33,7 @@ public class Database implements PropertiesLoader {
         try {
             properties = loadProperties("/database.properties");
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("loading error: ", e);
         }
 
     }
