@@ -36,7 +36,7 @@ public class SessionFactoryProvider {
      * @return the session factory
      */
     public  static SessionFactory getSessionFactory(){
-        if(sessionFactory.equals(null)){
+        if(sessionFactory == null){
             createSessionFactory();
         }
         return  sessionFactory;
