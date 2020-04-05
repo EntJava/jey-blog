@@ -5,9 +5,12 @@
 - [ ] Create REST API Endpoints
 
         * GET all blogPosts
-        * GET a single blogPost
         * POST (Create) blogPost
+        
+        * GET a single blogPost by Id
         * PUT  Update) blogPost
+        
+        * GET a single blogPost by title
         * DELETE  blogPost
 - [ ] Create unit Test
 - [ ] Create blogPost Dao
