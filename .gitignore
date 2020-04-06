@@ -1,5 +1,6 @@
 /src/main/resources/hibernate.cfg.xml
 /notes/*
 /src/test/resources/
-/src/main/resources/
-/logs/
+/src/main/resources/*
+/logs/*
+/target/*
