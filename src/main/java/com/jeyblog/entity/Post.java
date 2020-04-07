@@ -22,7 +22,6 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode
 @XmlRootElement
-@JacksonXmlRootElement(namespace = "urn:stackify:jacksonxml", localName = "postData")
 public class Post {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")

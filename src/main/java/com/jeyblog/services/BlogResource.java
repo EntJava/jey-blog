@@ -35,7 +35,7 @@ public class BlogResource {
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
+    @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML,
             MediaType.APPLICATION_FORM_URLENCODED,MediaType.MULTIPART_FORM_DATA})
     public Response getAllPostsJSON() throws JsonProcessingException {
@@ -47,6 +47,7 @@ public class BlogResource {
         String posts = objectMapper.writeValueAsString(postList);
         return Response.status(200).entity(posts).build();
     }
+
 
     /**
      * Create post response.
