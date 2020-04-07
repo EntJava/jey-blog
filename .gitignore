@@ -45,7 +45,8 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 /notes/
-/src/test/resources/*
+/src/test/resources/
+jey-blog.iml
 /src/main/resources/
 # Maven
 /logs/
