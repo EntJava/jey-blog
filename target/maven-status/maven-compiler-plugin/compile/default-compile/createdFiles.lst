@@ -1,6 +1,0 @@
-com/jeyblog/perisistence/SessionFactoryProvider.class
-com/jeyblog/utility/PropertiesLoader.class
-com/jeyblog/services/ApplicationServices.class
-com/jeyblog/entity/Post.class
-com/jeyblog/perisistence/GenericDao.class
-com/jeyblog/services/BlogResource.class
