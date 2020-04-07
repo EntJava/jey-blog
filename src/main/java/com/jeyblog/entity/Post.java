@@ -2,10 +2,7 @@ package com.jeyblog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -25,12 +22,11 @@ import java.time.LocalDateTime;
 @ToString
 @EqualsAndHashCode
 @XmlRootElement
-
 @JacksonXmlRootElement(namespace = "urn:stackify:jacksonxml", localName = "postData")
 public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO,generator = "native")
-    @GenericGenerator(name = "native",strategy = "native")
+    @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
+    @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "post_id")
     private int postId;
     private String title;
@@ -53,4 +49,8 @@ public class Post {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
+
+    public Post() {
+        pubDate = LocalDateTime.now();
+    }
 }
