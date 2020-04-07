@@ -47,8 +47,8 @@ fabric.properties
 /notes/
 /src/test/resources/
 jey-blog.iml
-/src/main/resources/
 # Maven
 /logs/
 /lib/
 /target/
+/src/main/java/resources/
