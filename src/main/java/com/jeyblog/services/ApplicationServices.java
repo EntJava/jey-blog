@@ -11,6 +11,7 @@ public class ApplicationServices extends Application {
     public Set<Class<?>> getClasses() {
         HashSet classes = new HashSet<Class<?>>();
         classes.add(BlogResource.class);
+        classes.add(io.swagger.v3.jaxrs2.integration.resources.OpenApiResource.class);
         return classes;
     }
 }
