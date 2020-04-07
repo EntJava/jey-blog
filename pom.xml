@@ -30,6 +30,7 @@
     <junit-vintage-version>4.12.0</junit-vintage-version>
     <jupiter-version>5.0.0</jupiter-version>
     <junit-platform-runner-version>1.0.0</junit-platform-runner-version>
+    <swagger-jaxrs-version>1.6.1</swagger-jaxrs-version>
     <swagger-version>2.1.2</swagger-version>
   </properties>
 
@@ -102,7 +103,13 @@
     </dependency>
 
 <!--    Swagger-->
-    <dependency>
+    <!-- https://mvnrepository.com/artifact/io.swagger/swagger-jersey2-jaxrs -->
+<!--    <dependency>-->
+<!--      <groupId>io.swagger</groupId>-->
+<!--      <artifactId>swagger-jersey2-jaxrs</artifactId>-->
+<!--      <version>${swagger-jaxrs-version}</version>-->
+<!--    </dependency>-->
+        <dependency>
       <groupId>io.swagger.core.v3</groupId>
       <artifactId>swagger-jaxrs2</artifactId>
       <version>${swagger-version}</version>
@@ -112,7 +119,7 @@
       <artifactId>swagger-jaxrs2-servlet-initializer-v2</artifactId>
       <version>${swagger-version}</version>
     </dependency>
-    <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core -->
+<!--     https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-core-->
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
