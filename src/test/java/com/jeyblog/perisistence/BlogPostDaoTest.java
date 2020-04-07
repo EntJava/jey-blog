@@ -40,5 +40,22 @@ public class BlogPostDaoTest {
         assertNotEquals(0,id);
     }
 
+    @Test
+    void getPostById(){
+        Post post = (Post) postDao.getById(4);
+        assertTrue(post.getAuthor().equals("Nadine"));
+        assertTrue(post.getTitle().equals("The happiness"));
+        assertTrue(post.getCategory().equals("Social"));
+        assertTrue(post.getDescription().equals("So what is persistence?"));
+    }
 
+    @Test
+    void saveOrUpdatePost(){
+        Post post = (Post) postDao.getById(4);
+        post.setAuthor("testAuthor");
+        post.setDescription("testDescription");
+        postDao.saveOrUpdate(post);
+        Post updatedPost = (Post) postDao.getById(4);
+        assertTrue(post.equals(updatedPost));
+    }
 }

@@ -59,8 +59,29 @@ public class GenericDao <T> {
         return id;
     }
 
-    //TODO GeT BY ID
-    //TODO UPDATE
+    /**
+     * Gets an entity by id
+     * @param id entity id to search by
+     * @return entity
+     */
+    public <T> T getById(int id) {
+        Session session = getSession();
+        T entity = (T)session.get(type, id);
+        session.close();
+        return entity;
+    }
+
+    /**
+     * Inserts or updates the entity.
+     * @param entity entity to be inserted/saved
+     */
+    public void saveOrUpdate(T entity) {
+        Session session = getSession();
+        Transaction transaction = session.beginTransaction();
+        session.saveOrUpdate(entity);
+        transaction.commit();
+        session.close();
+    }
 
     //TODO GET BY TITLE
     //TODO DELETE
