@@ -85,3 +85,80 @@ java.lang.NullPointerException: inStream parameter is null
 [ERROR] 2020-04-05 17:46:59.801 [main] Database - java.lang.NullPointerException
 [ERROR] 2020-04-05 17:48:31.975 [main] Database - java.lang.NullPointerException
 [ERROR] 2020-04-05 17:53:37.778 [main] Database - java.lang.NullPointerException
+[ERROR] 2020-04-05 18:02:28.743 [main] Database - java.lang.NullPointerException
+[ERROR] 2020-04-05 18:06:53.949 [main] Database - java.lang.NullPointerException
+[ERROR] 2020-04-05 18:09:56.207 [main] Database - error: java.lang.NullPointerException
+[ERROR] 2020-04-05 18:11:57.164 [main] Database - error: java.lang.NullPointerException
+[ERROR] 2020-04-05 18:52:59.263 [main] Database - loading error: 
+java.lang.NullPointerException: inStream parameter is null
+	at java.util.Objects.requireNonNull(Objects.java:246) ~[?:?]
+	at java.util.Properties.load(Properties.java:403) ~[?:?]
+	at com.jeyblog.utility.PropertiesLoader.loadProperties(PropertiesLoader.java:15) ~[classes/:?]
+	at com.jeyblog.test.utility.Database.<init>(Database.java:34) [test-classes/:?]
+	at com.jeyblog.test.utility.Database.<clinit>(Database.java:26) [test-classes/:?]
+	at com.jeyblog.perisistence.BlogPostDaoTest.setUp(BlogPostDaoTest.java:19) [test-classes/:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[?:?]
+	at jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62) ~[?:?]
+	at jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[?:?]
+	at java.lang.reflect.Method.invoke(Method.java:566) ~[?:?]
+	at org.junit.platform.commons.util.ReflectionUtils.invokeMethod(ReflectionUtils.java:389) [junit-platform-commons-1.0.0.jar:1.0.0]
+	at org.junit.jupiter.engine.execution.ExecutableInvoker.invoke(ExecutableInvoker.java:115) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.ClassTestDescriptor.invokeMethodInExtensionContext(ClassTestDescriptor.java:289) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.ClassTestDescriptor.lambda$synthesizeBeforeEachMethodAdapter$11(ClassTestDescriptor.java:277) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.lambda$null$2(TestMethodTestDescriptor.java:132) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.execution.ThrowableCollector.execute(ThrowableCollector.java:40) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeMethodsOrCallbacksUntilExceptionOccurs(TestMethodTestDescriptor.java:152) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.invokeBeforeEachMethods(TestMethodTestDescriptor.java:131) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:106) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.jupiter.engine.descriptor.TestMethodTestDescriptor.execute(TestMethodTestDescriptor.java:57) [junit-jupiter-engine-5.0.0.jar:5.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.lambda$execute$3(HierarchicalTestExecutor.java:83) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.SingleTestExecutor.executeSafely(SingleTestExecutor.java:66) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:77) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.lambda$null$2(HierarchicalTestExecutor.java:92) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) [?:?]
+	at java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:177) [?:?]
+	at java.util.Iterator.forEachRemaining(Iterator.java:133) [?:?]
+	at java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801) [?:?]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:484) [?:?]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474) [?:?]
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) [?:?]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) [?:?]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) [?:?]
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497) [?:?]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.lambda$execute$3(HierarchicalTestExecutor.java:92) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.SingleTestExecutor.executeSafely(SingleTestExecutor.java:66) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:77) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.lambda$null$2(HierarchicalTestExecutor.java:92) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:183) [?:?]
+	at java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:177) [?:?]
+	at java.util.Iterator.forEachRemaining(Iterator.java:133) [?:?]
+	at java.util.Spliterators$IteratorSpliterator.forEachRemaining(Spliterators.java:1801) [?:?]
+	at java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:484) [?:?]
+	at java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:474) [?:?]
+	at java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:150) [?:?]
+	at java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:173) [?:?]
+	at java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234) [?:?]
+	at java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:497) [?:?]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.lambda$execute$3(HierarchicalTestExecutor.java:92) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.SingleTestExecutor.executeSafely(SingleTestExecutor.java:66) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:77) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestExecutor.execute(HierarchicalTestExecutor.java:51) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.engine.support.hierarchical.HierarchicalTestEngine.execute(HierarchicalTestEngine.java:43) [junit-platform-engine-1.0.0.jar:1.0.0]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:170) [junit-platform-launcher-1.0.0.jar:1.0.0]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:154) [junit-platform-launcher-1.0.0.jar:1.0.0]
+	at org.junit.platform.launcher.core.DefaultLauncher.execute(DefaultLauncher.java:90) [junit-platform-launcher-1.0.0.jar:1.0.0]
+	at com.intellij.junit5.JUnit5IdeaTestRunner.startRunnerWithArgs(JUnit5IdeaTestRunner.java:69) [junit5-rt.jar:?]
+	at com.intellij.rt.junit.IdeaTestRunner$Repeater.startRunnerWithArgs(IdeaTestRunner.java:33) [junit-rt.jar:?]
+	at com.intellij.rt.junit.JUnitStarter.prepareStreamsAndStart(JUnitStarter.java:230) [junit-rt.jar:?]
+	at com.intellij.rt.junit.JUnitStarter.main(JUnitStarter.java:58) [junit-rt.jar:?]
+[ERROR] 2020-04-05 18:52:59.273 [main] Database - error: java.lang.NullPointerException
+[ERROR] 2020-04-05 18:55:04.876 [main] Database - SQL error: java.sql.SQLException: The server time zone value 'CDT' is unrecognized or represents more than one time zone. You must configure either the server or JDBC driver (via the serverTimezone configuration property) to use a more specifc time zone value if you want to utilize time zone support.
+[ERROR] 2020-04-06 20:50:28.734 [main] Database - SQL error: java.sql.SQLException: The server time zone value 'CDT' is unrecognized or represents more than one time zone. You must configure either the server or JDBC driver (via the serverTimezone configuration property) to use a more specifc time zone value if you want to utilize time zone support.
+[DEBUG] 2020-04-06 20:55:28.879 [main] GenericDao - List of all entities: [Post(postId=1, title=How to create a generic Dao, author=James, category=Education, pubDate=2020-04-06T20:55:27, description=Hibernate ORM is concerned with helping your application to achieve persistence., createdAt=2020-04-06T20:55:27, updatedAt=2020-04-06T20:55:27), Post(postId=2, title=Hope, author=Henry, category=Education, pubDate=2020-04-06T20:55:27, description=So what is persistence? Persistence simply means that we would like our application’s data to outlive the applications process., createdAt=2020-04-06T20:55:27, updatedAt=2020-04-06T20:55:27), Post(postId=3, title=Peace, author=Chantal, category=Politics, pubDate=2020-04-06T20:55:27, description= In Java terms, we would like the state of (some of) our objects to live beyond the scope of the JVM so that the same state is available later., createdAt=2020-04-06T20:55:27, updatedAt=2020-04-06T20:55:27), Post(postId=4, title=The happiness, author=Nadine, category=Social, pubDate=2020-04-06T20:55:27, description=So what is persistence?, createdAt=2020-04-06T20:55:27, updatedAt=2020-04-06T20:55:27), Post(postId=5, title=Great Dane, author=Ella, category=Politics, pubDate=2020-04-06T20:55:27, description=Hibernate ORM is concerned with helping your application to achieve persistence., createdAt=2020-04-06T20:55:27, updatedAt=2020-04-06T20:55:27)]
+[DEBUG] 2020-04-06 20:55:38.231 [main] GenericDao - A new Entity was Added with an Id: 7
+[ERROR] 2020-04-06 21:18:00.240 [main] Database - SQL error: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '20:10:24,'Hibernate ORM is concerned with helping your application to achieve pe' at line 2
+[ERROR] 2020-04-06 21:18:44.206 [main] Database - SQL error: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '20:10:24,'Hibernate ORM is concerned with helping your application to achieve pe' at line 2
+[ERROR] 2020-04-06 21:21:03.379 [main] Database - SQL error: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '20:10:24,'Hibernate ORM is concerned with helping your application to achieve pe' at line 2
+[ERROR] 2020-04-06 21:21:35.358 [main] Database - SQL error: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '20:10:24,'Hibernate ORM is concerned with helping your application to achieve pe' at line 2
+[ERROR] 2020-04-06 21:21:41.573 [main] Database - SQL error: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '20:10:24,'Hibernate ORM is concerned with helping your application to achieve pe' at line 2
+[DEBUG] 2020-04-06 21:21:42.684 [main] GenericDao - A new Entity was Added with an Id: 8

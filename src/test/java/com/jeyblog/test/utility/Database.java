@@ -67,7 +67,7 @@ public class Database implements PropertiesLoader {
             try {
                 connection.close();
             } catch (SQLException e) {
-                System.out.println("Cannot close connection" + e);
+                logger.error("Cannot close connection" + e);
             }
         }
 
@@ -103,9 +103,9 @@ public class Database implements PropertiesLoader {
             }
 
         } catch (SQLException se) {
-            logger.error(se);
+            logger.error("SQL error: " + se);
         } catch (Exception e) {
-            logger.error(e);
+            logger.error("error: " + e);
         } finally {
             disconnect();
         }
