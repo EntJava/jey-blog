@@ -8,6 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
+import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.time.LocalDateTime;
 
@@ -27,19 +28,31 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.AUTO, generator = "native")
     @GenericGenerator(name = "native", strategy = "native")
     @Column(name = "post_id")
+    @XmlElement(name = "postId")
     private int postId;
+
+    @XmlElement(name = "title")
     private String title;
+
+    @XmlElement(name = "author")
     private String author;
+
+    @XmlElement(name = "category")
     private String category;
+
     @Column(name = "publication_date")
     @EqualsAndHashCode.Exclude
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @XmlElement(name = "pubDate")
     private LocalDateTime pubDate;
+
+    @XmlElement(name = "description")
     private String description;
 
     @EqualsAndHashCode.Exclude
     @CreationTimestamp
     @Column(name = "created_at")
+    @XmlElement(name = "createdAt")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
@@ -47,6 +60,7 @@ public class Post {
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at")
+    @XmlElement(name = "updatedAt")
     private LocalDateTime updatedAt;
 
     public Post() {

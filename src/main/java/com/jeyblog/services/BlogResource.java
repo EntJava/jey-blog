@@ -1,17 +1,13 @@
 package com.jeyblog.services;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.jeyblog.utility.PostModel;
 import com.jeyblog.entity.Post;
 import com.jeyblog.perisistence.GenericDao;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
-import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 
 import javax.ws.rs.*;
@@ -21,9 +17,21 @@ import java.util.List;
 
 /**
  * Blog Post resource (exposed at "/" path
+ * Swagger Resources
+ * https://www.youtube.com/watch?v=GKGAkbHe_nw
+ * https://www.youtube.com/watch?v=5lQgi-n05F4
+ * @author Jeanne
+ * @version 1.0.0
+ * @since 2020-04-06
  */
 @Path("/posts")
 @Log4j2
+@Api("BlogResource/")
+//@SwaggerDefinition(tags ={  @Tag(name = "BlogPost Resource", description = "REST API CRUD operations Endpoints for blog Post")})
+@SwaggerDefinition(
+        tags ={  @Tag(name = "BlogResource", description = "REST API CRUD operations Endpoints for blog Post")},
+        consumes = {MediaType.APPLICATION_JSON}
+)
 public class BlogResource {
     private GenericDao blogPostDao = new GenericDao<>(Post.class);
     /**
@@ -35,6 +43,8 @@ public class BlogResource {
      * Method handling HTTP GET requests. The returned object will be sent
      * to the client as "application/json" media type.
      * Gets all posts json.
+     * Swagger annotations:
+     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
      *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
      * @return the all posts as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
@@ -43,18 +53,13 @@ public class BlogResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML,
             MediaType.APPLICATION_FORM_URLENCODED,MediaType.MULTIPART_FORM_DATA})
-    @Operation(summary = "Finds all posts",
-            tags = {"posts"},
-            description = "The posts are in json format",
-            responses = {
-                    @ApiResponse(
-                            content = @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = Post.class))),
-                    @ApiResponse(
-                            responseCode = "400", description = "Invalid status value"
-                    )}
-    )
-    public Response getAllPostsJSON() throws JsonProcessingException {
+    @ApiOperation(value = "Fetch all the posts. No login required.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Data Not found!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response getPosts() throws JsonProcessingException {
         List<Post> postList = blogPostDao.getAll();
         objectMapper =  new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule())
@@ -68,25 +73,32 @@ public class BlogResource {
     /**
      * Create post response.
      *
-     * @param newPost the new post
+     * @param post the new post
      * @return the response
      * @throws JsonProcessingException the json processing exception
      */
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @Operation(summary = "Add a new post.",
-            tags = {"posts"},
-            responses = {
-                    @ApiResponse(responseCode = "405", description = "Invalid input")
-            })
+    @ApiOperation(value = "Create a new Post. When creating a post required fields are: " +
+            "title , author, category and description")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Bad Request, Bad data format!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
     public Response createPost(
-            @Parameter(description = "Post object to create", required = true) Post newPost) throws JsonProcessingException {
+            @ApiParam(required = true) Post post) throws JsonProcessingException {
         objectMapper =  new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-        String post = objectMapper.writeValueAsString(blogPostDao.create(newPost));
-        log.error("Post: " + post);
-        return Response.status(200).entity(post).build();
+//        Post newPost = new Post();
+//        newPost.setTitle(post.getTitle());
+//        newPost.setAuthor(post.getAuthor());
+//        newPost.setCategory(post.getCategory());
+//        newPost.setDescription(post.getDescription());
+        String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
+        log.error("Post: " + postObj);
+        return Response.status(200).entity(postObj).build();
     }
 
 }
