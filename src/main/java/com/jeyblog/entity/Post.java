@@ -51,12 +51,4 @@ public class Post {
     public Post() {
         pubDate = LocalDateTime.now();
     }
-    public Post(String title, String author, String category, String summary) {
-        title = this.title;
-        author =  this.author;
-        category =  this.category;
-        summary =  this.description;
-    }
-
-
 }
