@@ -50,6 +50,11 @@ public class ApplicationServices extends Application {
             throw new RuntimeException(e.getMessage(), e);
         }
     }
+
+    public ApplicationServices() {
+
+    }
+
     @Override
     public Set<Class<?>> getClasses() {
         HashSet classes = new HashSet<Class<?>>();

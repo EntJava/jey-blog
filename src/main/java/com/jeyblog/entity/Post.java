@@ -48,8 +48,15 @@ public class Post {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at")
     private LocalDateTime updatedAt;
-
     public Post() {
         pubDate = LocalDateTime.now();
     }
+    public Post(String title, String author, String category, String summary) {
+        title = this.title;
+        author =  this.author;
+        category =  this.category;
+        summary =  this.description;
+    }
+
+
 }
