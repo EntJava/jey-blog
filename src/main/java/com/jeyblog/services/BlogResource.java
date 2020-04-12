@@ -82,10 +82,10 @@ public class BlogResource {
     }
 
     @PUT
-    @Path("{id}/{description}")
+    @Path("/update")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updatePost(@PathParam("id") int id, @PathParam("description") String description) throws JsonProcessingException {
+    public Response updatePost(@FormParam("id") int id, @FormParam("description") String description) throws JsonProcessingException {
         Post post = (Post) blogPostDao.getById(id);
         post.setDescription(description);
         blogPostDao.saveOrUpdate(post);
