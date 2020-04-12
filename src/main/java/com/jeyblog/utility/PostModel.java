@@ -3,6 +3,10 @@ package com.jeyblog.utility;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * The type Post model.
+ * Model for required fields in blog Post
+ */
 @Getter
 @Setter
 public class PostModel {

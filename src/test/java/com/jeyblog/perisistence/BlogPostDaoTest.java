@@ -10,15 +10,26 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * The type Blog post dao test.
+ */
 public class BlogPostDaoTest {
 
+    /**
+     * The Post dao.
+     */
     GenericDao postDao;
+
+    /**
+     * Set up.
+     */
     @BeforeEach
     void setUp(){
         postDao =  new GenericDao(Post.class);
         Database database = Database.getInstance();
         database.runSQL("cleandb.sql");
     }
+
     /**
      * Verify that all Crews are retrieved from db
      */
@@ -28,6 +39,9 @@ public class BlogPostDaoTest {
         assertEquals(5,posts.size());
     }
 
+    /**
+     * Create post.
+     */
     @Test
     void createPost(){
         Post newPost = new Post();
@@ -40,6 +54,9 @@ public class BlogPostDaoTest {
         assertNotEquals(0,id);
     }
 
+    /**
+     * Get post by id.
+     */
     @Test
     void getPostById(){
         Post post = (Post) postDao.getById(4);
@@ -49,6 +66,9 @@ public class BlogPostDaoTest {
         assertTrue(post.getDescription().equals("So what is persistence?"));
     }
 
+    /**
+     * Save or update post.
+     */
     @Test
     void saveOrUpdatePost(){
         Post post = (Post) postDao.getById(4);
