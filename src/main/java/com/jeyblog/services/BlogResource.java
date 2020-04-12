@@ -83,7 +83,7 @@ public class BlogResource {
         objectMapper =  new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule())
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .enable(SerializationFeature.INDENT_OUTPUT)
+                .enable(SerializationFeature.INDENT_OUTPUT);
         String posts = objectMapper.writeValueAsString(post);
         return Response.status(200).entity(posts).build();
     }
