@@ -8,8 +8,33 @@ getting users feedback about what they like and issues etc...
 
 It is not easy to find a free and simple blog post REST API for developer to consume and add this feature on web applications.
  The jey-blog application will provide simple CRUD blog-post REST API endpoints to developers to consume while adding blog. 
+### Supported format for blog post REST API
+* application/json
 
+### Supported Blog post Actions and REST API endpoints 
+    * GET: 
+            Get All posts : /rest-api/posts
+            Get by postId:  /rest-api/posts/{postId}
+            get by title: /rest-api/posts/{title} 
+    * POST:
+            Create a new blog post: /rest-api/posts
+    * PUT:
+            Update blog post: /rest-api/posts/{postId} 
+    * DELETE:
+            Remove a blog post: /rest-api/posts/{postId}
+    
+### The Attributes of Blog Post Resource
+
+    postId
+    title
+    author
+    category 
+    pubDate
+    description
+    createdAt
+    updatedAt
 ### Project Technologies/Techniques 
+    
 ##  Database
  MySQL database
 * Stores posts
