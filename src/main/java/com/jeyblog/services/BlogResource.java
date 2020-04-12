@@ -67,4 +67,24 @@ public class BlogResource {
         return Response.status(200).entity(post).build();
     }
 
+    /**
+     * This method retrieve a post and return an "application/json" media type.
+     *
+     * @param id
+     * @return the all posts as application/json response
+     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
+     */
+    @GET
+    @Path("/{post}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getPostByIDJSON(@PathParam("post") int id) throws JsonProcessingException {
+        Post post = (Post) blogPostDao.getById(id);
+        objectMapper =  new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule())
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .enable(SerializationFeature.INDENT_OUTPUT)
+        String posts = objectMapper.writeValueAsString(post);
+        return Response.status(200).entity(posts).build();
+    }
 }
