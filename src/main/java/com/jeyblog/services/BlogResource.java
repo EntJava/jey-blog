@@ -81,20 +81,12 @@ public class BlogResource {
         return Response.status(200).entity(posts).build();
     }
 
-    @POST
-    @Path("/update")
+    @PUT
+    @Path("{id}/{description}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updatePost(
-            @FormParam("id") int id,
-            @FormParam("title") String title,
-            @FormParam("author") String author,
-            @FormParam("category") String category,
-            @FormParam("description") String description) throws JsonProcessingException {
+    public Response updatePost(@PathParam("id") int id, @PathParam("description") String description) throws JsonProcessingException {
         Post post = (Post) blogPostDao.getById(id);
-        post.setTitle(title);
-        post.setAuthor(author);
-        post.setCategory(category);
         post.setDescription(description);
         blogPostDao.saveOrUpdate(post);
         String output = "Post ID " + id + " has been successfully updated to: " + post.toString();
