@@ -74,10 +74,12 @@ public class BlogResource {
         }
         catch (JsonProcessingException ex)
         {
+            logger.error(ex);
             return Response.status(500).build();
         }
         catch (Exception ex)
         {
+            logger.error(ex);
             return Response.status(500).build();
         }
     }
@@ -108,6 +110,7 @@ public class BlogResource {
         }
         catch (Exception ex)
         {
+            logger.error(ex);
             return Response.status(500).build();
         }
     }
@@ -132,21 +135,17 @@ public class BlogResource {
     public Response createPost(
             @ApiParam(required = true) Post post) throws JsonProcessingException {
         try {
-
-        }
-        catch (Exception ex){
-
-        }
-        objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule());
-        String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
-        log.error("Post: " + postObj);
-        if (Response.status(200).equals(200)) {
+            objectMapper = new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule());
+            String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
             return Response.status(200).entity(postObj).build();
-        } else if (Response.serverError().equals(500)) {
-           return Response.status(500).entity("Internal Error Occurred!").build();
-        } else {
-          return  Response.noContent().entity(Response.serverError()).build();
+        } catch (JsonProcessingException ex) {
+            logger.error("Post: " + post, ex);
+            return Response.status(500).entity("Internal Error Occurred!").build();
+        } catch (Exception ex){
+
+            logger.error("Post: " + post, ex);
+            return Response.status(500).entity("Internal Error Occurred!").build();
         }
     }
 
@@ -162,13 +161,23 @@ public class BlogResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     public Response getPostByIDJSON(@PathParam("post") int id) throws JsonProcessingException {
-        Post post = (Post) blogPostDao.getById(id);
-        objectMapper =  new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .enable(SerializationFeature.INDENT_OUTPUT);
-        String posts = objectMapper.writeValueAsString(post);
-        return Response.status(200).entity(posts).build();
+        try {
+            Post post = (Post) blogPostDao.getById(id);
+            objectMapper =  new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule())
+                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                    .enable(SerializationFeature.INDENT_OUTPUT);
+            String posts = objectMapper.writeValueAsString(post);
+            return Response.status(200).entity(posts).build();
+
+        } catch (JsonProcessingException ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).entity("Internal Error Occurred!").build();
+        } catch (Exception ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).entity("Internal Error Occurred!").build();
+        }
+
     }
 
     /**
@@ -202,10 +211,10 @@ public class BlogResource {
 
             return Response.status(200).entity(update).build();
         } catch (JsonProcessingException ex) {
-            log.error(ex);
+            logger.error("Post: " + id, ex);
             return Response.status(500).build();
         } catch (Exception ex) {
-            log.error(ex);
+            logger.error("Post: " + id, ex);
             return Response.status(500).build();
         }
     }
@@ -236,7 +245,7 @@ public class BlogResource {
             blogPostDao.saveOrUpdate(post);
             return Response.status(200).entity(post).build();
         } catch (Exception ex) {
-            logger.error(ex);
+            logger.error("Post: " + id, ex);
             return Response.status(500).build();
         }
     }
@@ -268,8 +277,10 @@ public class BlogResource {
             String posts = objectMapper.writeValueAsString(postList);
             return Response.status(200).entity(posts).build();
         } catch (JsonProcessingException ex) {
+            logger.error("Post Category: " + category, ex);
             return Response.status(500).build();
         } catch (Exception ex) {
+            logger.error("Post Category: " + category, ex);
             return Response.status(500).build();
         }
     }
@@ -295,6 +306,7 @@ public class BlogResource {
             List<Post> postList =  blogPostDao.getByColumnName("category", category);
             return Response.status(200).entity(new GenericEntity<List<Post>>(postList) {}).build();
         } catch (Exception ex) {
+            logger.error("Post Category: " + category, ex);
             return Response.status(500).build();
         }
     }
@@ -322,6 +334,7 @@ public class BlogResource {
             String output = "Post ID " + id + " was successfully deleted.";
             return Response.status(200).entity(output).build();
         } catch (Exception ex) {
+            logger.error("Post ID: " + id, ex);
             return Response.status(500).build();
         }
     }
