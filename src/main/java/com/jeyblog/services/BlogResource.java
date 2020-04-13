@@ -3,6 +3,7 @@ package com.jeyblog.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jeyblog.entity.Post;
 import com.jeyblog.perisistence.GenericDao;
@@ -38,6 +39,7 @@ public class BlogResource {
      * The Object mapper.
      */
     ObjectMapper objectMapper;
+    XmlMapper xmlMapper;
 
     /**
      * Method handling HTTP GET requests. The returned object will be sent
@@ -46,27 +48,45 @@ public class BlogResource {
      * Swagger annotations:
      * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
      *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     *
+     * https://stackoverflow.com/questions/42846869/set-response-media-type-as-either-xml-or-json
      * @return the all posts as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
     @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML,
             MediaType.TEXT_HTML,MediaType.TEXT_PLAIN})
-    @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Fetch all the posts. No login required.")
+    @Consumes({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    @ApiOperation(value = "Fetch all the posts. No login required.",
+    consumes = "application/json, application/xml",
+    produces = "application/json, application.xml")
+
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400, message = "Data Not found!"),
+            @ApiResponse(code = 404, message = "Data Not found!"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
     public Response getPosts() throws JsonProcessingException {
         List<Post> postList = blogPostDao.getAll();
         objectMapper =  new ObjectMapper();
+        xmlMapper = new XmlMapper();
         objectMapper.registerModule(new JavaTimeModule())
                 .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
                 .enable(SerializationFeature.INDENT_OUTPUT);
-        String posts = objectMapper.writeValueAsString(postList);
-        return Response.status(200).entity(posts).build();
+
+            String posts = objectMapper.writeValueAsString(postList);
+            return Response.status(200).entity(posts).build();
+
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_XML)
+    @Path("/posts/xml")
+    public Response getPostXML() throws JsonProcessingException {
+        xmlMapper = new XmlMapper();
+        List<Post> listPost = blogPostDao.getAll();
+        String xmlPosts = xmlMapper.writeValueAsString(listPost);
+        return Response.status(200).entity(xmlPosts).build();
     }
 
     /**
