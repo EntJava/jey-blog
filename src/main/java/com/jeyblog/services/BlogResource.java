@@ -121,4 +121,22 @@ public class BlogResource {
         String posts = objectMapper.writeValueAsString(post);
         return Response.status(200).entity(posts).build();
     }
+
+    @PUT
+    @Path("/{id}/{description}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response updatePost(@PathParam("id")int id, @PathParam("description")String description)
+            throws JsonProcessingException {
+        Post post = (Post)blogPostDao.getById(id);
+        post.setDescription(description);
+
+        blogPostDao.saveOrUpdate(post);
+        objectMapper =  new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        String update = objectMapper.writeValueAsString("update");
+        return Response.status(200).entity(update).build();
+
+    }
+
 }
