@@ -11,8 +11,11 @@ import java.util.List;
 
 /**
  * The type Generic dao.
- *
+ * It handles all CRUD operations and any entity can use it.
  * @param <T> the type parameter
+ * @author  Jeane, Yia, Estefanie
+ * @version  1.0.0
+ * @since 2020-04-12
  */
 @Log4j2
 public class GenericDao <T> {
