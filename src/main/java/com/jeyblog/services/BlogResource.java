@@ -71,14 +71,14 @@ public class BlogResource {
      * This method retrieve a post and return an "application/json" media type.
      *
      * @param id
-     * @return the all posts as application/json response
+     * @return the post as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Path("/{post}")
+    @Path("/getID-{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response getPostByID(@PathParam("post") int id) throws JsonProcessingException {
+    public Response getPostByID(@PathParam("id") int id) throws JsonProcessingException {
         Post post = (Post) blogPostDao.getById(id);
         objectMapper =  new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule())
@@ -88,17 +88,21 @@ public class BlogResource {
         return Response.status(200).entity(posts).build();
     }
 
-    @PUT
-    @Path("/{id}/{description}")
+    /**
+     * This method delete a post from the server.
+     *
+     * @param id
+     * @return the success message
+     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
+     */
+    @DELETE
+    @Path("/deleteID-{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updatePost(@PathParam("id") int id, @PathParam("description") String description) throws JsonProcessingException {
-        Post post = (Post) blogPostDao.getById(id);
-        post.setDescription(description);
-        blogPostDao.saveOrUpdate(post);
-        String output = "Post ID " + id + " has been successfully updated to: " + post.toString();
+    public Response deletePost(@PathParam("id") int id) throws JsonProcessingException {
+        List<Post> postList = blogPostDao.getAll();
+        blogPostDao.delete(blogPostDao.getById(id));
+        String output = "Post ID " + id + " was successfully deleted.";
         return Response.status(200).entity(output).build();
     }
-
-
 }
