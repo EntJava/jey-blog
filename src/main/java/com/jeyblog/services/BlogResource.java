@@ -44,8 +44,6 @@ import java.util.List;
         tags ={@Tag(name="Support format", description = "application/json and application/xml"),
                 @Tag(name = "BlogResource", description = "REST API CRUD operations Endpoints for blog Post")
         }
-        tags ={  @Tag(name = "BlogResource", description = "REST API CRUD operations Endpoints for blog Post")},
-        consumes = {MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN}
 )
 public class BlogResource {
     private GenericDao blogPostDao = new GenericDao<>(Post.class);
@@ -66,9 +64,6 @@ public class BlogResource {
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Fetch all the posts. No login required.")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Fetch all posts in JSON format.",
@@ -114,7 +109,6 @@ public class BlogResource {
     @Path("/xml")
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
-    @Path("/xml")
     @ApiOperation(value = "Fetch all posts in XML format.",
             notes = "All the posts available are displayed under this endpoint in XML format.")
 
@@ -166,9 +160,6 @@ public class BlogResource {
         }
     }
 
-            logger.error("Post: " + post, ex);
-            return Response.status(500).entity("Internal Error Occurred!").build();
-        }
     /**
      * Create post xml response.
      *
@@ -243,7 +234,10 @@ public class BlogResource {
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
-    public Response updatePost(@PathParam("id")int id, @PathParam("description")String description) {
+    public Response updatePost(@ApiParam(value = "Post Id of the object to update.", required = true)
+                                   @PathParam("id")int id,
+                               @ApiParam(value = "Description updated attribute.", required = true)
+                               @PathParam("description")String description) {
         try {
             Post post = (Post)blogPostDao.getById(id);
             post.setDescription(description);
@@ -263,46 +257,36 @@ public class BlogResource {
         }
     }
 
-    /**
-     * Method handling HTTP PUT requests. The returned object will be sent
-     * to the client as "application/xml" media type.
-     * Updates the post description then returns the updated post as XML
-     * Swagger annotations:
-     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
-     * https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
-     *
-     * @param id          the id
-     * @param description the description
-     * @return the all posts as application/json response
-     */
-    @PUT
-    @Path("/{id}/{description}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Update an existing Posts description",
-            notes = "Anyone can edit all the posts. Next version will require authentication.")
-    @Path("xml/{id}/{description}")
-    @Produces({MediaType.APPLICATION_XML})
-    @Consumes({MediaType.APPLICATION_XML})
-    @ApiOperation(value = "Update an existing Posts description")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400,message = "Data formatting error"),
-            @ApiResponse(code = 500, message = "Internal Error!")
-    })
-    public Response updatePostXML(@PathParam("id")int id, @PathParam("description")String description) {
-    public Response updatePost(@ApiParam(value = "Post Id od the object to update.", required = true)@PathParam("id")int id,
-                               @ApiParam(value = "Description updated attribute.", required = true)@PathParam("description")String description) {
-        try {
-            Post post = (Post)blogPostDao.getById(id);
-            post.setDescription(description);
-            blogPostDao.saveOrUpdate(post);
-            return Response.status(200).entity(post).build();
-        } catch (Exception ex) {
-            logger.error("Post: " + id, ex);
-            return Response.status(500).build();
+        /**
+         * Method handling HTTP PUT requests. The returned object will be sent
+         * to the client as "application/xml" media type.
+         * Updates the post description then returns the updated post as XML
+         * Swagger annotations:
+         * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+         *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+         * @return the all posts as application/json response
+         */
+        @PUT
+        @Path("xml/{id}/{description}")
+        @Produces({MediaType.APPLICATION_XML})
+        @Consumes({MediaType.APPLICATION_XML})
+        @ApiOperation(value = "Update an existing Posts description")
+        @ApiResponses({
+                @ApiResponse(code = 200, message = "Success"),
+                @ApiResponse(code = 400,message = "Data formatting error"),
+                @ApiResponse(code = 500, message = "Internal Error!")
+        })
+        public Response updatePostXML(@ApiParam(value = "Post Id of the object to update.", required = true) @PathParam("id") int id, @PathParam("description") String description) {
+            try {
+                Post post = (Post)blogPostDao.getById(id);
+                post.setDescription(description);
+                blogPostDao.saveOrUpdate(post);
+                return Response.status(200).entity(post).build();
+            } catch (Exception ex) {
+                logger.error("Post: " + id, ex);
+                return Response.status(500).build();
+            }
         }
-    }
 
     /**
      * This method retrieve a list of posts with an "application/json" media type.
