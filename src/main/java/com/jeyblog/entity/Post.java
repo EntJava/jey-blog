@@ -46,7 +46,7 @@ public class Post {
     @Column(name = "publication_date")
     @EqualsAndHashCode.Exclude
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @XmlTransient
+    @XmlElement
     private LocalDateTime pubDate;
 
     @XmlElement(name = "description")
@@ -55,7 +55,7 @@ public class Post {
     @EqualsAndHashCode.Exclude
     @CreationTimestamp
     @Column(name = "created_at")
-    @XmlTransient
+    @XmlElement
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
@@ -63,7 +63,7 @@ public class Post {
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at")
-    @XmlTransient
+    @XmlElement
     private LocalDateTime updatedAt;
 
     /**

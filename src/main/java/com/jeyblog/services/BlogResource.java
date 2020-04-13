@@ -12,6 +12,7 @@ import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -95,10 +96,10 @@ public class BlogResource {
     @Consumes(MediaType.APPLICATION_XML)
     @Path("/xml")
     public Response getPostXML() throws JsonProcessingException {
-        xmlMapper = new XmlMapper();
         List<Post> listPost = blogPostDao.getAll();
-        String xmlPosts = xmlMapper.writeValueAsString(listPost);
-        return Response.status(200).entity(xmlPosts).build();
+        GenericEntity<List<Post>> posts =  new GenericEntity<List<Post>>(listPost) {};
+        log.error(" XML get ALL: " + Response.status(200).entity(listPost).build());
+        return Response.status(200).entity(posts).build();
     }
 
     /**
