@@ -249,10 +249,16 @@ public class BlogResource {
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Path("category/{category}")
+    @Path("/category/{category}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response getPostByID(@PathParam("category") String category) {
+    @ApiOperation(value = "Get all posts of a specific category")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Data formatting error"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response getPostByCategory(@PathParam("category") String category) {
         try {
             List<Post> postList =  blogPostDao.getByColumnName("category", category);
             objectMapper =  new ObjectMapper();
@@ -269,13 +275,38 @@ public class BlogResource {
     }
 
     /**
+     * This method retrieve a list of posts of a specified category with an "application/xml" media type.
+     *
+     * @param category
+     * @return the post as application/json response
+     */
+    @GET
+    @Path("/xml/category/{category}")
+    @Produces({MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_XML})
+    @ApiOperation(value = "Get all posts of a specific category")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Data formatting error"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response getPostByCategoryXML(@PathParam("category") String category) {
+        try {
+            List<Post> postList =  blogPostDao.getByColumnName("category", category);
+            return Response.status(200).entity(new GenericEntity<List<Post>>(postList) {}).build();
+        } catch (Exception ex) {
+            return Response.status(500).build();
+        }
+    }
+
+    /**
      * This method delete a post from the server.
      *
      * @param id
      * @return the success message
      */
     @DELETE
-    @Path("/deleteID-{id}")
+    @Path("/delete/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Deletes an existing post")
