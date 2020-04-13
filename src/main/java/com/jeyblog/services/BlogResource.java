@@ -9,6 +9,8 @@ import com.jeyblog.entity.Post;
 import com.jeyblog.perisistence.GenericDao;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
@@ -34,6 +36,7 @@ import java.util.List;
 )
 public class BlogResource {
     private GenericDao blogPostDao = new GenericDao<>(Post.class);
+    private final Logger logger = LogManager.getLogger(this.getClass());
     /**
      * The Object mapper.
      */
@@ -97,7 +100,7 @@ public class BlogResource {
 //        newPost.setCategory(post.getCategory());
 //        newPost.setDescription(post.getDescription());
         String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
-        log.error("Post: " + postObj);
+        logger.error("Post: " + postObj);
         return Response.status(200).entity(postObj).build();
     }
 
@@ -127,7 +130,7 @@ public class BlogResource {
     /**
      * Method handling HTTP PUT requests. The returned object will be sent
      * to the client as "application/json" media type.
-     * Updates the post description then returns the updates post as JSON
+     * Updates the post description then returns the updated post as JSON
      * Swagger annotations:
      * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
      *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
@@ -140,7 +143,7 @@ public class BlogResource {
     @ApiOperation(value = "Update an existing Posts description")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400,message = "JSON Processing error"),
+            @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
     public Response updatePost(@PathParam("id")int id, @PathParam("description")String description) {
@@ -159,6 +162,37 @@ public class BlogResource {
             return Response.status(500).build();
         } catch (Exception ex) {
             log.error(ex);
+            return Response.status(500).build();
+        }
+    }
+
+    /**
+     * Method handling HTTP PUT requests. The returned object will be sent
+     * to the client as "application/xml" media type.
+     * Updates the post description then returns the updated post as XML
+     * Swagger annotations:
+     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * @return the all posts as application/json response
+     */
+    @PUT
+    @Path("xml/{id}/{description}")
+    @Produces({MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_XML})
+    @ApiOperation(value = "Update an existing Posts description")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Data formatting error"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response updatePostXML(@PathParam("id")int id, @PathParam("description")String description) {
+        try {
+            Post post = (Post)blogPostDao.getById(id);
+            post.setDescription(description);
+            blogPostDao.saveOrUpdate(post);
+            return Response.status(200).entity(post).build();
+        } catch (Exception ex) {
+            logger.error(ex);
             return Response.status(500).build();
         }
     }
