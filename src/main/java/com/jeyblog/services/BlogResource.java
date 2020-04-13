@@ -20,9 +20,9 @@ import java.util.List;
  * Swagger Resources
  * https://www.youtube.com/watch?v=GKGAkbHe_nw
  * https://www.youtube.com/watch?v=5lQgi-n05F4
- * @author Jeanne
+ * @author Jeanne, Yia, Estefanie
  * @version 1.0.0
- * @since 2020-04-06
+ * @since 2020-04-12
  */
 @Path("/posts")
 @Log4j2
@@ -121,4 +121,46 @@ public class BlogResource {
         String posts = objectMapper.writeValueAsString(post);
         return Response.status(200).entity(posts).build();
     }
+
+
+
+    /**
+     * Method handling HTTP PUT requests. The returned object will be sent
+     * to the client as "application/json" media type.
+     * Updates the post description then returns the updates post as JSON
+     * Swagger annotations:
+     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * @return the all posts as application/json response
+     */
+    @PUT
+    @Path("/{id}/{description}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "Update an existing Posts description")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "JSON Processing error"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response updatePost(@PathParam("id")int id, @PathParam("description")String description) {
+        try {
+            Post post = (Post)blogPostDao.getById(id);
+            post.setDescription(description);
+            blogPostDao.saveOrUpdate(post);
+
+            objectMapper =  new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            String update = objectMapper.writeValueAsString(post);
+
+            return Response.status(200).entity(update).build();
+        } catch (JsonProcessingException ex) {
+            log.error(ex);
+            return Response.status(500).build();
+        } catch (Exception ex) {
+            log.error(ex);
+            return Response.status(500).build();
+        }
+    }
+
 }
