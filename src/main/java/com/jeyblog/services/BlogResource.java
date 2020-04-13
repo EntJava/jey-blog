@@ -20,9 +20,9 @@ import java.util.List;
  * Swagger Resources
  * https://www.youtube.com/watch?v=GKGAkbHe_nw
  * https://www.youtube.com/watch?v=5lQgi-n05F4
- * @author Jeanne
+ * @author Jeanne, Yia, Estefanie
  * @version 1.0.0
- * @since 2020-04-06
+ * @since 2020-04-12
  */
 @Path("/posts")
 @Log4j2
@@ -147,15 +147,16 @@ public class BlogResource {
         try {
             Post post = (Post)blogPostDao.getById(id);
             post.setDescription(description);
-
             blogPostDao.saveOrUpdate(post);
+
             objectMapper =  new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             String update = objectMapper.writeValueAsString(post);
+
             return Response.status(200).entity(update).build();
         } catch (JsonProcessingException ex) {
             log.error(ex);
-            return Response.status(400).build();
+            return Response.status(500).build();
         } catch (Exception ex) {
             log.error(ex);
             return Response.status(500).build();
