@@ -32,8 +32,18 @@ import java.util.List;
 @Api("BlogResource/")
 //@SwaggerDefinition(tags ={  @Tag(name = "BlogPost Resource", description = "REST API CRUD operations Endpoints for blog Post")})
 @SwaggerDefinition(
-        tags ={  @Tag(name = "BlogResource", description = "REST API CRUD operations Endpoints for blog Post")},
-        consumes = {MediaType.APPLICATION_JSON, MediaType.TEXT_PLAIN}
+        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
+        host = "localhost:8080",
+        basePath = "/jey-blog/rest-api",
+        consumes = {"application/json, application/xml"},
+        produces = {"application/json, application/xml"},
+        info = @Info(title = "Blog Post Rest Api",
+        version = "1.0.0",
+        description = "Simple API that handles CRUD operations of Post for a Blog." +
+                " No authentication  required to consume this API yet."),
+        tags ={@Tag(name="Support format", description = "application/json and application/xml"),
+                @Tag(name = "BlogResource", description = "REST API CRUD operations Endpoints for blog Post")
+        }
 )
 public class BlogResource {
     private GenericDao blogPostDao = new GenericDao<>(Post.class);
@@ -54,12 +64,14 @@ public class BlogResource {
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Produces(MediaType.APPLICATION_JSON)
-    @Consumes(MediaType.APPLICATION_JSON)
-    @ApiOperation(value = "Fetch all the posts. No login required.")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "Fetch all posts in JSON format.",
+    notes = "All the posts available are display under this endpoint in JSON format.")
+
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400, message = "Data Not found!"),
+            @ApiResponse(code = 404, message = "Data Not found!"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
     public Response getPosts() {
@@ -97,22 +109,19 @@ public class BlogResource {
     @Path("/xml")
     @Produces(MediaType.APPLICATION_XML)
     @Consumes(MediaType.APPLICATION_XML)
-    @ApiOperation(value = "Fetch all the posts. No login required.")
+    @ApiOperation(value = "Fetch all posts in XML format.",
+            notes = "All the posts available are displayed under this endpoint in XML format.")
+
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400, message = "Data Not found!"),
+            @ApiResponse(code = 404, message = "Data Not found!"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
-    public Response getPostsXML() {
-        try {
-            List<Post> postList = blogPostDao.getAll();
-            return Response.status(200).entity(new GenericEntity<List<Post>>(postList) {}).build();
-        }
-        catch (Exception ex)
-        {
-            logger.error(ex);
-            return Response.status(500).build();
-        }
+    public Response getPostXML() throws JsonProcessingException {
+        List<Post> listPost = blogPostDao.getAll();
+        GenericEntity<List<Post>> posts =  new GenericEntity<List<Post>>(listPost) {};
+        log.error(" XML get ALL: " + Response.status(200).entity(listPost).build());
+        return Response.status(200).entity(posts).build();
     }
 
     /**
@@ -123,9 +132,10 @@ public class BlogResource {
      * @throws JsonProcessingException the json processing exception
      */
     @POST
-    @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML, MediaType.TEXT_HTML})
+    @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Create a new Post. When creating a post required fields are: " +
+    @ApiOperation(value = "Add a new Post in JSON format.",
+            notes = "The following are required fields to successfully created a new post. " +
             "title , author, category and description")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
@@ -134,25 +144,50 @@ public class BlogResource {
     })
     public Response createPost(
             @ApiParam(required = true) Post post) throws JsonProcessingException {
-        try {
-            objectMapper = new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule());
-            String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
-            return Response.status(200).entity(postObj).build();
-        } catch (JsonProcessingException ex) {
-            logger.error("Post: " + post, ex);
-            return Response.status(500).entity("Internal Error Occurred!").build();
-        } catch (Exception ex){
-
-            logger.error("Post: " + post, ex);
-            return Response.status(500).entity("Internal Error Occurred!").build();
+        objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule())
+        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false)
+        .enable(SerializationFeature.INDENT_OUTPUT);
+        String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
+        int id = blogPostDao.create(postObj);
+        log.error("Post: " + postObj);
+        if (Response.status(200).equals(200)) {
+            return Response.status(200).entity("Post Added Successfully with ID: " + id).build();
+        } else if (Response.serverError().equals(500)) {
+           return Response.status(500).entity("Internal Error Occurred!").build();
+        } else {
+          return  Response.noContent().entity(Response.serverError()).build();
         }
     }
 
     /**
+     * Create post xml response.
+     *
+     * @param post the post
+     * @return the response
+     */
+    @POST
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_XML)
+    @ApiOperation(value = "Add a new Post in XML format.",
+            notes = "The following are required fields to successfully created a new post. " +
+                    "title , author, category and description")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    @Path("/new-post/xml")
+    public Response createPostXML(@ApiParam(required = true) Post post) {
+        int postID =  blogPostDao.create(post);
+        return Response.status(200).entity("Success fully added a new post with ID : " + postID).build();
+    }
+
+
+    /**
      * This method retrieve a post and return an "application/json" media type.
      *
-     * @param id
+     * @param id the id
      * @return the all posts as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
@@ -199,7 +234,10 @@ public class BlogResource {
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
-    public Response updatePost(@PathParam("id")int id, @PathParam("description")String description) {
+    public Response updatePost(@ApiParam(value = "Post Id of the object to update.", required = true)
+                                   @PathParam("id")int id,
+                               @ApiParam(value = "Description updated attribute.", required = true)
+                               @PathParam("description")String description) {
         try {
             Post post = (Post)blogPostDao.getById(id);
             post.setDescription(description);
@@ -214,41 +252,41 @@ public class BlogResource {
             logger.error("Post: " + id, ex);
             return Response.status(500).build();
         } catch (Exception ex) {
-            logger.error("Post: " + id, ex);
+            log.error("Post: " + id, ex);
             return Response.status(500).build();
         }
     }
 
-    /**
-     * Method handling HTTP PUT requests. The returned object will be sent
-     * to the client as "application/xml" media type.
-     * Updates the post description then returns the updated post as XML
-     * Swagger annotations:
-     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
-     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
-     * @return the all posts as application/json response
-     */
-    @PUT
-    @Path("xml/{id}/{description}")
-    @Produces({MediaType.APPLICATION_XML})
-    @Consumes({MediaType.APPLICATION_XML})
-    @ApiOperation(value = "Update an existing Posts description")
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400,message = "Data formatting error"),
-            @ApiResponse(code = 500, message = "Internal Error!")
-    })
-    public Response updatePostXML(@PathParam("id")int id, @PathParam("description")String description) {
-        try {
-            Post post = (Post)blogPostDao.getById(id);
-            post.setDescription(description);
-            blogPostDao.saveOrUpdate(post);
-            return Response.status(200).entity(post).build();
-        } catch (Exception ex) {
-            logger.error("Post: " + id, ex);
-            return Response.status(500).build();
+        /**
+         * Method handling HTTP PUT requests. The returned object will be sent
+         * to the client as "application/xml" media type.
+         * Updates the post description then returns the updated post as XML
+         * Swagger annotations:
+         * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+         *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+         * @return the all posts as application/json response
+         */
+        @PUT
+        @Path("xml/{id}/{description}")
+        @Produces({MediaType.APPLICATION_XML})
+        @Consumes({MediaType.APPLICATION_XML})
+        @ApiOperation(value = "Update an existing Posts description")
+        @ApiResponses({
+                @ApiResponse(code = 200, message = "Success"),
+                @ApiResponse(code = 400,message = "Data formatting error"),
+                @ApiResponse(code = 500, message = "Internal Error!")
+        })
+        public Response updatePostXML(@ApiParam(value = "Post Id of the object to update.", required = true) @PathParam("id") int id, @PathParam("description") String description) {
+            try {
+                Post post = (Post)blogPostDao.getById(id);
+                post.setDescription(description);
+                blogPostDao.saveOrUpdate(post);
+                return Response.status(200).entity(post).build();
+            } catch (Exception ex) {
+                logger.error("Post: " + id, ex);
+                return Response.status(500).build();
+            }
         }
-    }
 
     /**
      * This method retrieve a list of posts with an "application/json" media type.
@@ -314,7 +352,7 @@ public class BlogResource {
     /**
      * This method delete a post from the server.
      *
-     * @param id
+     * @param id the id
      * @return the success message
      */
     @DELETE
