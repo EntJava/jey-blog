@@ -109,6 +109,21 @@ public class GenericDao <T> {
     }
 
     /**
+     * Finds entities by string fields
+     * @param column the property name.
+     * @param value the value by which to find.
+     * @return
+     */
+    public List<T> getByColumnName(String column, String value) {
+        Session session = getSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> query = builder.createQuery(type);
+        Root<T> root = query.from(type);
+        query.select(root).where(builder.equal(root.get(column),value));
+        return session.createQuery(query).getResultList();
+    }
+
+    /**
      * Deletes the entity.
      * @param entity entity to be deleted
      */

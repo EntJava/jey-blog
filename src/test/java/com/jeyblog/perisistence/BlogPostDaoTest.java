@@ -89,6 +89,15 @@ public class BlogPostDaoTest {
     }
 
     /**
+     * Verify that all posts by category are retrieved from db
+     */
+    @Test
+    void getAllPostsByCategory(){
+        List<Post> posts = postDao.getByColumnName("category", "Education");
+        assertEquals(2,posts.size());
+    }
+
+    /**
      * Test delete post.
      * @throws Exception the exception
      */
