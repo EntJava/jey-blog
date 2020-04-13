@@ -10,7 +10,7 @@
         * GET a single blogPost by Id
         * PUT  Update) blogPost
         
-        * GET a single blogPost by title
+        * GET a single blogPost by title ( Better get by Category)
         * DELETE  blogPost
 - [ ] Create unit Test
 - [ ] Create blogPost Dao
