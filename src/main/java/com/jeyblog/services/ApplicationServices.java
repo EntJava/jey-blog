@@ -29,9 +29,9 @@ public class ApplicationServices extends Application {
      */
     public ApplicationServices(@Context ServletConfig servletConfig) {
         BeanConfig beanConfig = new BeanConfig();
-        beanConfig.setVersion("1.0.0");
-        beanConfig.setTitle("Blog Post API");
-        beanConfig.setSchemes(new String[]{"http","https"});
+//        beanConfig.setVersion("1.0.0");
+//        beanConfig.setTitle("Blog Post API");
+//        beanConfig.setSchemes(new String[]{"http","https"});
         beanConfig.setHost("localhost:8080");
         //TODO add AWS URL
         beanConfig.setBasePath("/jey-blog/rest-api");
