@@ -122,6 +122,17 @@ public class BlogResource {
         return Response.status(200).entity(posts).build();
     }
 
+
+
+    /**
+     * Method handling HTTP PUT requests. The returned object will be sent
+     * to the client as "application/json" media type.
+     * Updates the post description then returns the updates post as JSON
+     * Swagger annotations:
+     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * @return the all posts as application/json response
+     */
     @PUT
     @Path("/{id}/{description}")
     @Produces({MediaType.APPLICATION_JSON})
@@ -129,7 +140,7 @@ public class BlogResource {
     @ApiOperation(value = "Update an existing Posts description")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 400,message = "Bad Request, Bad data format!"),
+            @ApiResponse(code = 400,message = "JSON Processing error"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
     public Response updatePost(@PathParam("id")int id, @PathParam("description")String description) {
@@ -140,7 +151,7 @@ public class BlogResource {
             blogPostDao.saveOrUpdate(post);
             objectMapper =  new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-            String update = objectMapper.writeValueAsString("update");
+            String update = objectMapper.writeValueAsString(post);
             return Response.status(200).entity(update).build();
         } catch (JsonProcessingException ex) {
             log.error(ex);
