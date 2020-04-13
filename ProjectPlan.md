@@ -5,14 +5,15 @@
 - [X] Familiarize ourselves with Jersey (JAX-RS) 
 ### Week 10
 - [x]  Create team repo
-- [ ]  Create Blog Post database and table
-- [ ]  Create Blog Post Dao
-- [ ] Create REST API Endpoints
+- [x]  Create Blog Post database and table
+- [x] Create Blog Post Dao
+- [x] Create REST API Endpoints
 
 ### Week 11
 - [ ] Deploy on AWS 
-- [ ] Refactor the application
-- [ ] test REST API Endpoint
+- [x] Refactor the application
+- [x] test REST API Endpoint
+- [x] Create documentation
 - [ ] Prepare Presentation
 
 ### Week 12 - Team project due
