@@ -126,17 +126,29 @@ public class BlogResource {
     @Path("/{id}/{description}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response updatePost(@PathParam("id")int id, @PathParam("description")String description)
-            throws JsonProcessingException {
-        Post post = (Post)blogPostDao.getById(id);
-        post.setDescription(description);
+    @ApiOperation(value = "Update an existing Posts description")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Bad Request, Bad data format!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response updatePost(@PathParam("id")int id, @PathParam("description")String description) {
+        try {
+            Post post = (Post)blogPostDao.getById(id);
+            post.setDescription(description);
 
-        blogPostDao.saveOrUpdate(post);
-        objectMapper =  new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        String update = objectMapper.writeValueAsString("update");
-        return Response.status(200).entity(update).build();
-
+            blogPostDao.saveOrUpdate(post);
+            objectMapper =  new ObjectMapper();
+            objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+            String update = objectMapper.writeValueAsString("update");
+            return Response.status(200).entity(update).build();
+        } catch (JsonProcessingException ex) {
+            log.error(ex);
+            return Response.status(400).build();
+        } catch (Exception ex) {
+            log.error(ex);
+            return Response.status(500).build();
+        }
     }
 
 }
