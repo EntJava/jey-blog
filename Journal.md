@@ -50,6 +50,7 @@ Jeanne:
 |------|------|-------|
 |Implemented Swagger jaxrs and Swagger UI to added documentation and endpoints for REST API| 9 ||
 | Researched and added Jersey Test Framework with get All posts unit Tests| 5 ||
+|Added Endpoints and Post attributes to the readme| .5||
 |Meeting and competed log| 2.25 ||
 
 ## Week 12
