@@ -34,21 +34,27 @@ It is not easy to find a free and simple blog post REST API for developer to con
     createdAt
     updatedAt
 ### Project Technologies/Techniques 
-    
+* JAXRS
+* Jackson
+* Jersey
+* Swagger jaxrs and Swagger UI
+* Jersey Test Framework
 ##  Database
- MySQL database
+* MySQL database
 * Stores posts
 ## Object Relational Mapping (ORM)  Framework
-Hibernate 5
+* Hibernate 5
 ## Dependency Management
-Maven
+* Maven
 ## Hosting
 AWS
 # Independent Research Topic/s
-Host a group project on AWS
-Lombok project
+* Host a group project on AWS
+* Lombok project
+* Swagger jaxrs and Swagger UI
+* Jersey Test Framework
 ## Topics covered in class
-IDE: IntelliJ IDEA
+* IDE: IntelliJ IDEA
 
 ### Design
 ### [Project Plan](ProjectPlan.md)

@@ -65,6 +65,10 @@ public class Post {
     @Column(name = "updated_at")
     @XmlElement(name = "updatedAt")
     private LocalDateTime updatedAt;
+
+    /**
+     * Instantiates a new Post.
+     */
     public Post() {
         pubDate = LocalDateTime.now();
     }
