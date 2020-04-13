@@ -24,7 +24,7 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 @EqualsAndHashCode
-@XmlRootElement
+@XmlRootElement(name = "Post")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class Post {
     @Id

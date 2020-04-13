@@ -12,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import javax.ws.rs.*;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.List;
@@ -53,23 +54,62 @@ public class BlogResource {
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Produces({MediaType.APPLICATION_JSON,MediaType.APPLICATION_XML,
-            MediaType.TEXT_HTML,MediaType.TEXT_PLAIN})
-    @Consumes({MediaType.APPLICATION_JSON})
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value = "Fetch all the posts. No login required.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Data Not found!"),
             @ApiResponse(code = 500, message = "Internal Error!")
     })
-    public Response getPosts() throws JsonProcessingException {
-        List<Post> postList = blogPostDao.getAll();
-        objectMapper =  new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .enable(SerializationFeature.INDENT_OUTPUT);
-        String posts = objectMapper.writeValueAsString(postList);
-        return Response.status(200).entity(posts).build();
+    public Response getPosts() {
+        try {
+            List<Post> postList = blogPostDao.getAll();
+            objectMapper =  new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule())
+                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                    .enable(SerializationFeature.INDENT_OUTPUT);
+            String posts = objectMapper.writeValueAsString(postList);
+            return Response.status(200).entity(posts).build();
+        }
+        catch (JsonProcessingException ex)
+        {
+            return Response.status(500).build();
+        }
+        catch (Exception ex)
+        {
+            return Response.status(500).build();
+        }
+    }
+
+    /**
+     * Method handling HTTP GET requests. The returned object will be sent
+     * to the client as "application/xml" media type.
+     * Gets all posts xml.
+     * Swagger annotations:
+     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * @return the all posts as application/xml response
+     */
+    @GET
+    @Path("/xml")
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_XML)
+    @ApiOperation(value = "Fetch all the posts. No login required.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Data Not found!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response getPostsXML() {
+        try {
+            List<Post> postList = blogPostDao.getAll();
+            return Response.status(200).entity(new GenericEntity<List<Post>>(postList) {}).build();
+        }
+        catch (Exception ex)
+        {
+            return Response.status(500).build();
+        }
     }
 
     /**
@@ -91,13 +131,14 @@ public class BlogResource {
     })
     public Response createPost(
             @ApiParam(required = true) Post post) throws JsonProcessingException {
+        try {
+
+        }
+        catch (Exception ex){
+
+        }
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
-//        Post newPost = new Post();
-//        newPost.setTitle(post.getTitle());
-//        newPost.setAuthor(post.getAuthor());
-//        newPost.setCategory(post.getCategory());
-//        newPost.setDescription(post.getDescription());
         String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
         log.error("Post: " + postObj);
         if (Response.status(200).equals(200)) {
@@ -129,8 +170,6 @@ public class BlogResource {
         String posts = objectMapper.writeValueAsString(post);
         return Response.status(200).entity(posts).build();
     }
-
-
 
     /**
      * Method handling HTTP PUT requests. The returned object will be sent
@@ -203,24 +242,30 @@ public class BlogResource {
     }
 
     /**
-     * This method retrieve a post and return an "application/json" media type.
+     * This method retrieve a list of posts with an "application/json" media type.
      *
-     * @param id
+     * @param category
      * @return the post as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
-    @Path("/getID-{id}")
+    @Path("category/{category}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response getPostByID(@PathParam("id") int id) throws JsonProcessingException {
-        Post post = (Post) blogPostDao.getById(id);
-        objectMapper =  new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule())
-                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                .enable(SerializationFeature.INDENT_OUTPUT);
-        String posts = objectMapper.writeValueAsString(post);
-        return Response.status(200).entity(posts).build();
+    public Response getPostByID(@PathParam("category") String category) {
+        try {
+            List<Post> postList =  blogPostDao.getByColumnName("category", category);
+            objectMapper =  new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule())
+                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                    .enable(SerializationFeature.INDENT_OUTPUT);
+            String posts = objectMapper.writeValueAsString(postList);
+            return Response.status(200).entity(posts).build();
+        } catch (JsonProcessingException ex) {
+            return Response.status(500).build();
+        } catch (Exception ex) {
+            return Response.status(500).build();
+        }
     }
 
     /**
@@ -228,16 +273,25 @@ public class BlogResource {
      *
      * @param id
      * @return the success message
-     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @DELETE
     @Path("/deleteID-{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    public Response deletePost(@PathParam("id") int id) throws JsonProcessingException {
-        List<Post> postList = blogPostDao.getAll();
-        blogPostDao.delete(blogPostDao.getById(id));
-        String output = "Post ID " + id + " was successfully deleted.";
-        return Response.status(200).entity(output).build();
+    @ApiOperation(value = "Deletes an existing post")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Data formatting error"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response deletePost(@PathParam("id") int id) {
+        try
+        {
+            blogPostDao.delete(blogPostDao.getById(id));
+            String output = "Post ID " + id + " was successfully deleted.";
+            return Response.status(200).entity(output).build();
+        } catch (Exception ex) {
+            return Response.status(500).build();
+        }
     }
 }
