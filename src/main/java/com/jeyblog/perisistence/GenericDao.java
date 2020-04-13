@@ -89,8 +89,33 @@ public class GenericDao <T> {
         session.close();
     }
 
-    //TODO GET BY TITLE
-    //TODO DELETE
+    /**
+     * Finds entity by title.
+     * @param title the property name.
+     * @param value the value by which to find.
+     * @return
+     */
+    public T getPostByTitle(String title, Object value) {
+        Session session = getSession();
+        CriteriaBuilder builder = session.getCriteriaBuilder();
+        CriteriaQuery<T> query = builder.createQuery(type);
+        Root<T> root = query.from(type);
+        query.select(root).where(builder.equal(root.get(title),value));
+
+        return session.createQuery(query).uniqueResult();
+    }
+
+    /**
+     * Deletes the entity.
+     * @param entity entity to be deleted
+     */
+    public void delete(T entity) {
+        Session session = getSession();
+        Transaction transaction = session.beginTransaction();
+        session.delete(entity);
+        transaction.commit();
+        session.close();
+    }
 
 
 }

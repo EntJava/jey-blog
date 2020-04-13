@@ -78,4 +78,31 @@ public class BlogPostDaoTest {
         Post updatedPost = (Post) postDao.getById(4);
         assertTrue(post.equals(updatedPost));
     }
+
+    @Test
+    void getPostByTitle(){
+        Post post = (Post) postDao.getPostByTitle("title", "Hope");
+        assertTrue(post.getPostId() == 2);
+        assertTrue(post.getTitle().equals("Hope"));
+        assertTrue(post.getCategory().equals("Education"));
+        assertTrue(post.getDescription().equals("So what is persistence? Persistence simply means that we would like our application’s data to outlive the applications process."));
+    }
+
+    /**
+     * Test delete post.
+     * @throws Exception the exception
+     */
+    @Test
+    public void testDeletePost() throws Exception {
+        int sizeBeforeDelete = postDao.getAll().size();
+        Post postToDelete = (Post) postDao.getById(1);
+        int id = postToDelete.getPostId();
+        postDao.delete(postToDelete);
+        int sizeAfterDelete = postDao.getAll().size();
+
+        Post deletedPost = (Post) postDao.getById(id);
+
+        assertEquals(sizeBeforeDelete - 1, sizeAfterDelete);
+        assertNull(deletedPost);
+    }
 }
