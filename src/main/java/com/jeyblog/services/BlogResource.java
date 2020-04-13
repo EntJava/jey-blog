@@ -13,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -68,7 +69,6 @@ public class BlogResource {
         String posts = objectMapper.writeValueAsString(postList);
         return Response.status(200).entity(posts).build();
     }
-
 
     /**
      * Create post response.
@@ -163,4 +163,42 @@ public class BlogResource {
         }
     }
 
+    /**
+     * This method retrieve a post and return an "application/json" media type.
+     *
+     * @param id
+     * @return the post as application/json response
+     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
+     */
+    @GET
+    @Path("/getID-{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getPostByID(@PathParam("id") int id) throws JsonProcessingException {
+        Post post = (Post) blogPostDao.getById(id);
+        objectMapper =  new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule())
+                .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                .enable(SerializationFeature.INDENT_OUTPUT);
+        String posts = objectMapper.writeValueAsString(post);
+        return Response.status(200).entity(posts).build();
+    }
+
+    /**
+     * This method delete a post from the server.
+     *
+     * @param id
+     * @return the success message
+     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
+     */
+    @DELETE
+    @Path("/deleteID-{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response deletePost(@PathParam("id") int id) throws JsonProcessingException {
+        List<Post> postList = blogPostDao.getAll();
+        blogPostDao.delete(blogPostDao.getById(id));
+        String output = "Post ID " + id + " was successfully deleted.";
+        return Response.status(200).entity(output).build();
+    }
 }
