@@ -17,6 +17,9 @@ import java.time.LocalDateTime;
 /**
  * The type Post.
  * How to format Date https://stackoverflow.com/questions/28802544/java-8-localdate-jackson-format
+ * @author Jeanne
+ * @version 1.0.0
+ * @since 2020-04-12
  */
 @Table(name = "Post")
 @Entity(name = "Post")
