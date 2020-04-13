@@ -8,10 +8,7 @@ import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import javax.persistence.*;
-import javax.xml.bind.annotation.XmlAccessType;
-import javax.xml.bind.annotation.XmlAccessorType;
-import javax.xml.bind.annotation.XmlElement;
-import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.*;
 import java.time.LocalDateTime;
 
 /**
@@ -49,7 +46,7 @@ public class Post {
     @Column(name = "publication_date")
     @EqualsAndHashCode.Exclude
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @XmlElement(name = "pubDate")
+    @XmlTransient
     private LocalDateTime pubDate;
 
     @XmlElement(name = "description")
@@ -58,7 +55,7 @@ public class Post {
     @EqualsAndHashCode.Exclude
     @CreationTimestamp
     @Column(name = "created_at")
-    @XmlElement(name = "createdAt")
+    @XmlTransient
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime createdAt;
 
@@ -66,7 +63,7 @@ public class Post {
     @UpdateTimestamp
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @Column(name = "updated_at")
-    @XmlElement(name = "updatedAt")
+    @XmlTransient
     private LocalDateTime updatedAt;
 
     /**
@@ -74,5 +71,12 @@ public class Post {
      */
     public Post() {
         pubDate = LocalDateTime.now();
+    }
+
+    public Post(String title, String author, String category, String description) {
+        this.title = title;
+        this.author = author;
+        this.category = category;
+        this.description = description;
     }
 }
