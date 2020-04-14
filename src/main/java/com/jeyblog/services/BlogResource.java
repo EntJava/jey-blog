@@ -32,20 +32,20 @@ import java.util.List;
 @Api("BlogResource/")
 //@SwaggerDefinition(tags ={  @Tag(name = "BlogPost Resource", description = "REST API CRUD operations Endpoints for blog Post")})
 @SwaggerDefinition(
-
-//        Comment the following  3 lines in BlogResources
-//        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
-//        host = "localhost:8080",
-//        basePath = "/jey-blog/rest-api",
-        consumes = {"application/json, application/xml"},
-        produces = {"application/json, application/xml"},
+        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
+        host = "localhost:8080",
+        basePath = "/jey-blog/rest-api",
         info = @Info(title = "Blog Post Rest Api",
         version = "1.0.0",
         description = "Simple API that handles CRUD operations of Post for a Blog." +
-                " No authentication  required to consume this API yet."),
-        tags ={@Tag(name="Support format", description = "application/json and application/xml"),
-                @Tag(name = "BlogResource", description = "REST API CRUD operations Endpoints for blog Post")
-        }
+                " No authentication  required to consume this API yet. "),
+
+        tags ={
+                @Tag(name = "Endpoints for CRUD of  Blog Post.",description = "application/json and application/xml" )
+
+        },
+        consumes = {"application/json, application/xml"},
+        produces = {"application/json, application/xml"}
 )
 public class BlogResource {
     private GenericDao blogPostDao = new GenericDao<>(Post.class);
@@ -138,14 +138,16 @@ public class BlogResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Add a new Post in JSON format.",
             notes = "The following are required fields to successfully created a new post. " +
-            "title , author, category and description")
+            "title , author, category and description",
+                response = Post.class, responseContainer = "List")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response createPostJSON(
-            @ApiParam(required = true) Post post) throws JsonProcessingException {
+            @ApiParam(name = "Post Object", value = "A New post to add In JSON Format" ,
+                    required = true) Post post) throws JsonProcessingException {
         objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule())
         .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false)
@@ -179,42 +181,9 @@ public class BlogResource {
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Path("/new-post/xml")
-    public Response createPostXML(@ApiParam(required = true) Post post) {
+    public Response createPostXML(@ApiParam(name = "Post Object", value = "A New post to add In XML Format",required = true) Post post) {
         int postID =  blogPostDao.create(post);
         return Response.status(200).entity("Success fully added a new post with ID : " + postID).build();
-    }
-
-
-    /**
-     * This method retrieve a post and return an "application/json" media type.
-     *
-     * @param id the id
-     * @return the all posts as application/json response
-     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
-     */
-    @GET
-    @Path("/{postId}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response getPostByIDJSON(@ApiParam(name = "The Post Id of the object to display in JSON Format.")
-                                        @PathParam("postId") int id) throws JsonProcessingException {
-        try {
-            Post post = (Post) blogPostDao.getById(id);
-            objectMapper =  new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule())
-                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                    .enable(SerializationFeature.INDENT_OUTPUT);
-            String posts = objectMapper.writeValueAsString(post);
-            return Response.status(200).entity(posts).build();
-
-        } catch (JsonProcessingException ex) {
-            logger.error("Post: " + id, ex);
-            return Response.status(500).entity("Internal Server Error Occurred!").build();
-        } catch (Exception ex) {
-            logger.error("Post: " + id, ex);
-            return Response.status(500).entity("Internal Server Error Occurred!").build();
-        }
-
     }
 
     /**
@@ -230,14 +199,15 @@ public class BlogResource {
     @Path("/{id}/{description}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Update an existing Posts description")
+    @ApiOperation(value = "Update an existing Post description.",
+    notes = "The support format is JSON and complete URL = baseUrl + Endpints ")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
-    public Response updatePost(@ApiParam(value = "Post Id of the object to update.", required = true) @PathParam("id")int id,
-                               @ApiParam(value = "Description updated attribute.", required = true)
+    public Response updatePost(@ApiParam(value = "Post Id .", required = true) @PathParam("id")int id,
+                               @ApiParam(value = "Description.", required = true)
                                @PathParam("description")String description) {
         try {
             Post post = (Post)blogPostDao.getById(id);
@@ -258,6 +228,46 @@ public class BlogResource {
         }
     }
 
+    /**
+     * This method retrieve a post and return an "application/json" media type.
+     *
+     * @param id the id
+     * @return the all posts as application/json response
+     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
+     */
+
+    @ApiOperation(value = "Get a single post.",
+            notes = "The data object returned JSON Format.",
+            response = Post.class)
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Data not found!"),
+            @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @GET
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    public Response getPostByIDJSON(@ApiParam(name = "Post Id ",value = " Return JSON object.",required = true)
+                                    @PathParam("id") int id) {
+        try {
+            Post post = (Post) blogPostDao.getById(id);
+            objectMapper =  new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule())
+                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                    .enable(SerializationFeature.INDENT_OUTPUT);
+            String posts = objectMapper.writeValueAsString(post);
+            return Response.status(200).entity(posts).build();
+
+        } catch (JsonProcessingException ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
+        } catch (Exception ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
+        }
+    }
+
         /**
          * Method handling HTTP PUT requests. The returned object will be sent
          * to the client as "application/xml" media type.
@@ -271,14 +281,15 @@ public class BlogResource {
         @Path("xml/{id}/{description}")
         @Produces({MediaType.APPLICATION_XML})
         @Consumes({MediaType.APPLICATION_XML})
-        @ApiOperation(value = "Update an existing Posts description")
+        @ApiOperation(value = "Update an existing Posts description",
+        notes = "Description is the only update table attribute.")
         @ApiResponses({
                 @ApiResponse(code = 200, message = "Success"),
                 @ApiResponse(code = 400,message = "Data formatting error"),
                 @ApiResponse(code = 500, message = "Internal Server Error!")
         })
-        public Response updatePostXML(@ApiParam(value = "Post Id of the object to update.", required = true) @PathParam("id")int id,
-                                      @ApiParam(value = "Description updated attribute.", required = true)
+        public Response updatePostXML(@ApiParam(value = "Post Id.", required = true) @PathParam("id")int id,
+                                      @ApiParam(value = "Description attribute.", required = true)
                                       @PathParam("description")String description) {
             try {
                 Post post = (Post)blogPostDao.getById(id);
@@ -302,13 +313,14 @@ public class BlogResource {
     @Path("/category/{category}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Get all posts of a specific category in JSON Format.")
+    @ApiOperation(value = "Get all posts of a specific category in JSON Format.",
+    notes = "The Post category attribute used to get all posts under the same category.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
-    public Response getPostByCategory( @ApiParam(value = "The Post category attribute used to get all posts under the same category.")
+    public Response getPostByCategory( @ApiParam(value = "Get by category")
                                            @PathParam("category") String category) {
         try {
             List<Post> postList =  blogPostDao.getByColumnName("category", category);
@@ -337,13 +349,14 @@ public class BlogResource {
     @Path("/xml/category/{category}")
     @Produces({MediaType.APPLICATION_XML})
     @Consumes({MediaType.APPLICATION_XML})
-    @ApiOperation(value = "Get all posts of a specific category in XML Format")
+    @ApiOperation(value = "Get all posts of a specific category in XML Format",
+    notes ="Post category attribute used to get all posts under the same category." )
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
-    public Response getPostByCategoryXML(@ApiParam(value = "The Post category attribute used to get all posts under the same category.")
+    public Response getPostByCategoryXML(@ApiParam(value = "Post category.")
                                              @PathParam("category") String category) {
         try {
             List<Post> postList =  blogPostDao.getByColumnName("category", category);
@@ -364,13 +377,14 @@ public class BlogResource {
     @Path("/delete/{id}")
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Deletes an existing post in JSON Format")
+    @ApiOperation(value = "Deletes an existing post in JSON Format",
+    notes = "Pass the Id of the object you want yo remove.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
-    public Response deletePost(@ApiParam(name = "The Post Id of the object to delete.")
+    public Response deletePost(@ApiParam(name = "The Post Id")
                                    @PathParam("id") int id) {
         try
         {

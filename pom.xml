@@ -109,7 +109,6 @@
       <artifactId>swagger-models</artifactId>
       <version>${swagger-jaxrs-version}</version>
     </dependency>
-
     <!-- https://mvnrepository.com/artifact/io.swagger/swagger-jaxrs -->
     <dependency>
       <groupId>io.swagger</groupId>
