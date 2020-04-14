@@ -18,10 +18,9 @@ import javax.ws.rs.client.WebTarget;
 import javax.ws.rs.core.Application;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.MultivaluedHashMap;
 
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 /**
  * The type Blog post resource test.
@@ -34,7 +33,7 @@ public class BlogPostResourceTest extends JerseyTest {
     private WebTarget posts;
     @Before
     public void setUp() {
-        posts = ClientBuilder.newClient().target("http://localhost:8080/jeyblog/rest-api/posts");
+        posts = ClientBuilder.newClient().target("http://localhost:8080/jey-blog/rest-api/posts");
     }
     @Override
     protected Application configure() {
@@ -50,7 +49,7 @@ public class BlogPostResourceTest extends JerseyTest {
         Response response = posts.request().get();
         assertEquals("should return status 200", 200, response.getStatus());
         assertNotNull("Should return post list", response.getEntity().toString());
-        System.out.println( response);
+        System.out.println( "response: " + response);
         System.out.println(response.readEntity(String.class));
     }
 
@@ -88,7 +87,7 @@ public class BlogPostResourceTest extends JerseyTest {
             Response response = posts.request().post(Entity.json(post)); //Here we send POST request
         log.error(response);
         assertNotNull("Should return post list", response.getEntity().toString());
-        assertEquals("Should return status 400", 404, response.getStatus());
+        assertEquals("Should return status 400", 400, response.getStatus());
         System.out.println(response.getEntity());
     }
 

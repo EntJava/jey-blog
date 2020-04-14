@@ -32,9 +32,13 @@ import java.util.List;
 @Api("BlogResource/")
 //@SwaggerDefinition(tags ={  @Tag(name = "BlogPost Resource", description = "REST API CRUD operations Endpoints for blog Post")})
 @SwaggerDefinition(
-        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
-        host = "localhost:8080",
-        basePath = "/jey-blog/rest-api",
+
+//        Comment the following  3 lines in BlogResources
+//        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
+//        host = "localhost:8080",
+//        basePath = "/jey-blog/rest-api",
+        consumes = {"application/json, application/xml"},
+        produces = {"application/json, application/xml"},
         info = @Info(title = "Blog Post Rest Api",
         version = "1.0.0",
         description = "Simple API that handles CRUD operations of Post for a Blog." +
@@ -166,6 +170,7 @@ public class BlogResource {
 
     /**
      * Create post xml response.
+     *
      * @param post the post
      * @return the response
      */
@@ -184,6 +189,70 @@ public class BlogResource {
     public Response createPostXML(@ApiParam(name = "Post Object", value = "A New post to add In XML Format",required = true) Post post) {
         int postID =  blogPostDao.create(post);
         return Response.status(200).entity("Success fully added a new post with ID : " + postID).build();
+    }
+
+
+    /**
+     * This method retrieve a post and return an "application/json" media type.
+     *
+     * @param id the id
+     * @return the all posts as application/json response
+     */
+    @GET
+    @Path("/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "Get a new Post by ID in JSON format.",
+            notes = "ID is a require field to retrieve a Post")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response getPostByIDJSON(@ApiParam(value = "Id of the Post.", required = true) @PathParam("id") int id) {
+        try {
+            Post post = (Post) blogPostDao.getById(id);
+            objectMapper =  new ObjectMapper();
+            objectMapper.registerModule(new JavaTimeModule())
+                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
+                    .enable(SerializationFeature.INDENT_OUTPUT);
+            String posts = objectMapper.writeValueAsString(post);
+            return Response.status(200).entity(posts).build();
+
+        } catch (JsonProcessingException ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
+        } catch (Exception ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
+        }
+
+    }
+
+    /**
+     * This method retrieve a post and return a XML media type.
+     *
+     * @param id the id
+     * @return the all posts as a XML response
+     */
+    @GET
+    @Path("/xml/{id}")
+    @Produces(MediaType.APPLICATION_XML)
+    @Consumes(MediaType.APPLICATION_XML)
+    @ApiOperation(value = "Get a post by ID in XML format.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404, message = "Data Not found!"),
+            @ApiResponse(code = 500, message = "Internal Error!")
+    })
+    public Response getPostByIDXML(@ApiParam(value = "Id of the Post.", required = true) @PathParam("id") int id) {
+        try {
+            Post post = (Post)blogPostDao.getById(id);
+            return Response.status(200).entity(post).build();
+        } catch (Exception ex) {
+            logger.error("Post: " + id, ex);
+            return Response.status(500).build();
+        }
     }
 
     /**
@@ -386,6 +455,7 @@ public class BlogResource {
     })
     public Response deletePost(@ApiParam(name = "The Post Id")
                                    @PathParam("id") int id) {
+    public Response deletePost(@ApiParam(value = "Post Id of the object to delete.", required = true) @PathParam("id") int id) {
         try
         {
             blogPostDao.delete(blogPostDao.getById(id));
