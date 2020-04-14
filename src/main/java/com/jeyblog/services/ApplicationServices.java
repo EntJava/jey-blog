@@ -33,7 +33,7 @@ public class ApplicationServices extends Application {
 //        beanConfig.setTitle("Blog Post API");
 //        beanConfig.setSchemes(new String[]{"http","https"});
         beanConfig.setHost("localhost:8080");
-        //TODO add AWS URL
+        //beanConfig.setHost("localhost:8080");
         beanConfig.setBasePath("/jey-blog/rest-api");
         beanConfig.setResourcePackage("com.jeyblog.services");
         beanConfig.setScan(true);
