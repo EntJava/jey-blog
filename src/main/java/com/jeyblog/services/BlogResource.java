@@ -32,9 +32,11 @@ import java.util.List;
 @Api("BlogResource/")
 //@SwaggerDefinition(tags ={  @Tag(name = "BlogPost Resource", description = "REST API CRUD operations Endpoints for blog Post")})
 @SwaggerDefinition(
-        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
-        host = "localhost:8080",
-        basePath = "/jey-blog/rest-api",
+
+//        Comment the following  3 lines in BlogResources
+//        schemes = {SwaggerDefinition.Scheme.HTTP,SwaggerDefinition.Scheme.HTTPS},
+//        host = "localhost:8080",
+//        basePath = "/jey-blog/rest-api",
         consumes = {"application/json, application/xml"},
         produces = {"application/json, application/xml"},
         info = @Info(title = "Blog Post Rest Api",
@@ -72,7 +74,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 404, message = "Data Not found!"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response getPosts() {
         try {
@@ -115,7 +117,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 404, message = "Data Not found!"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response getPostXML() throws JsonProcessingException {
         List<Post> listPost = blogPostDao.getAll();
@@ -140,7 +142,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response createPost(
             @ApiParam(required = true) Post post) throws JsonProcessingException {
@@ -154,7 +156,7 @@ public class BlogResource {
         if (Response.status(200).equals(200)) {
             return Response.status(200).entity("Post Added Successfully with ID: " + id).build();
         } else if (Response.serverError().equals(500)) {
-           return Response.status(500).entity("Internal Error Occurred!").build();
+           return Response.status(500).entity("Internal Server Error Occurred!").build();
         } else {
           return  Response.noContent().entity(Response.serverError()).build();
         }
@@ -175,7 +177,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     @Path("/new-post/xml")
     public Response createPostXML(@ApiParam(required = true) Post post) {
@@ -207,10 +209,10 @@ public class BlogResource {
 
         } catch (JsonProcessingException ex) {
             logger.error("Post: " + id, ex);
-            return Response.status(500).entity("Internal Error Occurred!").build();
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
         } catch (Exception ex) {
             logger.error("Post: " + id, ex);
-            return Response.status(500).entity("Internal Error Occurred!").build();
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
         }
 
     }
@@ -232,7 +234,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response updatePost(@ApiParam(value = "Post Id of the object to update.", required = true)
                                    @PathParam("id")int id,
@@ -274,7 +276,7 @@ public class BlogResource {
         @ApiResponses({
                 @ApiResponse(code = 200, message = "Success"),
                 @ApiResponse(code = 400,message = "Data formatting error"),
-                @ApiResponse(code = 500, message = "Internal Error!")
+                @ApiResponse(code = 500, message = "Internal Server Error!")
         })
         public Response updatePostXML(@ApiParam(value = "Post Id of the object to update.", required = true) @PathParam("id") int id, @PathParam("description") String description) {
             try {
@@ -303,7 +305,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response getPostByCategory(@PathParam("category") String category) {
         try {
@@ -337,7 +339,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response getPostByCategoryXML(@PathParam("category") String category) {
         try {
@@ -363,7 +365,7 @@ public class BlogResource {
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
-            @ApiResponse(code = 500, message = "Internal Error!")
+            @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response deletePost(@PathParam("id") int id) {
         try
