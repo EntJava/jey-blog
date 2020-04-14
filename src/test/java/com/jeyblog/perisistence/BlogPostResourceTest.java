@@ -86,9 +86,21 @@ public class BlogPostResourceTest extends JerseyTest {
             Entity<Post> postEntity = Entity.entity(newPost, MediaType.APPLICATION_JSON);
         String post = objectMapper.writeValueAsString(postEntity);
             Response response = posts.request().post(Entity.json(post)); //Here we send POST request
-        log.error(response);
+        log.error(response);gi
         assertNotNull("Should return post list", response.getEntity().toString());
         assertEquals("Should return status 400", 404, response.getStatus());
         System.out.println(response.getEntity());
+    }
+
+    /**
+     * Test successful PUT
+     */
+    @Test
+    public void testPUT() {
+        BlogResource resource =  new BlogResource();
+        Response response = posts.request().put()
+        assertEquals("should return status 404", 404, response.getStatus());
+        System.out.println( response);
+        System.out.println(response.readEntity(String.class));
     }
 }
