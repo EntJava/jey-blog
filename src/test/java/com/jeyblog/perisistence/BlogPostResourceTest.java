@@ -91,4 +91,29 @@ public class BlogPostResourceTest extends JerseyTest {
         assertEquals("Should return status 400", 404, response.getStatus());
         System.out.println(response.getEntity());
     }
+
+    /**
+     * Test get post by id.
+     */
+    @Test
+    public void testGetPostByID() {
+        posts = posts.path("/2");
+        Response response = posts.request().get();
+        assertEquals("should return status 200", 200, response.getStatus());
+        assertNotNull("Should return postId 2", response.getEntity().toString());
+        System.out.println(response);
+        System.out.println(response.readEntity(String.class));
+    }
+
+    /**
+     * Test delete post by id.
+     * https://www.javaguides.net/2018/06/how-to-test-jersey-rest-api-with-junit.html
+     */
+    @Test
+    public void testDeletePostByID() {
+        posts = posts.path("/delete/1");
+        Response response = posts.request().delete();
+        assertEquals("Should return status 200", 200, response.getStatus());
+        System.out.println(response.readEntity(String.class));
+    }
 }
