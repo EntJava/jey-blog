@@ -30,7 +30,6 @@ import java.util.List;
 @Path("/posts")
 @Log4j2
 @Api("BlogResource/")
-//@SwaggerDefinition(tags ={  @Tag(name = "BlogPost Resource", description = "REST API CRUD operations Endpoints for blog Post")})
 @SwaggerDefinition(
 
 //        Comment the following  3 lines in BlogResources
@@ -42,14 +41,12 @@ import java.util.List;
         info = @Info(title = "Blog Post Rest Api",
         version = "1.0.0",
         description = "Simple API that handles CRUD operations of Post for a Blog." +
-                " No authentication  required to consume this API yet. "),
+                " No authentication  required to consume this API yet.  "),
 
         tags ={
-                @Tag(name = "Endpoints for CRUD of  Blog Post.",description = "application/json and application/xml" )
+                @Tag(name = "Endpoints for CRUD of  Blog Post.",description = " Supported format: application/json and application/xml" )
 
-        },
-        consumes = {"application/json, application/xml"},
-        produces = {"application/json, application/xml"}
+        }
 )
 public class BlogResource {
     private GenericDao blogPostDao = new GenericDao<>(Post.class);
@@ -192,11 +189,13 @@ public class BlogResource {
     }
 
 
+
     /**
      * This method retrieve a post and return an "application/json" media type.
      *
      * @param id the id
      * @return the all posts as application/json response
+     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
     @GET
     @Path("/{id}")
@@ -248,6 +247,7 @@ public class BlogResource {
     public Response getPostByIDXML(@ApiParam(value = "Id of the Post.", required = true) @PathParam("id") int id) {
         try {
             Post post = (Post)blogPostDao.getById(id);
+
             return Response.status(200).entity(post).build();
         } catch (Exception ex) {
             logger.error("Post: " + id, ex);
@@ -269,7 +269,7 @@ public class BlogResource {
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Update an existing Post description.",
-    notes = "The support format is JSON and complete URL = baseUrl + Endpints ")
+            notes = "The support format is JSON and complete URL = baseUrl + Endpints ")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
@@ -296,47 +296,6 @@ public class BlogResource {
             return Response.status(500).build();
         }
     }
-
-    /**
-     * This method retrieve a post and return an "application/json" media type.
-     *
-     * @param id the id
-     * @return the all posts as application/json response
-     * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
-     */
-
-    @ApiOperation(value = "Get a single post.",
-            notes = "The data object returned JSON Format.",
-            response = Post.class)
-    @ApiResponses({
-            @ApiResponse(code = 200, message = "Success"),
-            @ApiResponse(code = 404, message = "Data not found!"),
-            @ApiResponse(code = 500, message = "Internal Server Error!")
-    })
-    @GET
-    @Path("/{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    public Response getPostByIDJSON(@ApiParam(name = "Post Id ",value = " Return JSON object.",required = true)
-                                    @PathParam("id") int id) {
-        try {
-            Post post = (Post) blogPostDao.getById(id);
-            objectMapper =  new ObjectMapper();
-            objectMapper.registerModule(new JavaTimeModule())
-                    .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS, false)
-                    .enable(SerializationFeature.INDENT_OUTPUT);
-            String posts = objectMapper.writeValueAsString(post);
-            return Response.status(200).entity(posts).build();
-
-        } catch (JsonProcessingException ex) {
-            logger.error("Post: " + id, ex);
-            return Response.status(500).entity("Internal Server Error Occurred!").build();
-        } catch (Exception ex) {
-            logger.error("Post: " + id, ex);
-            return Response.status(500).entity("Internal Server Error Occurred!").build();
-        }
-    }
-
         /**
          * Method handling HTTP PUT requests. The returned object will be sent
          * to the client as "application/xml" media type.
@@ -455,7 +414,6 @@ public class BlogResource {
     })
     public Response deletePost(@ApiParam(name = "The Post Id")
                                    @PathParam("id") int id) {
-    public Response deletePost(@ApiParam(value = "Post Id of the object to delete.", required = true) @PathParam("id") int id) {
         try
         {
             blogPostDao.delete(blogPostDao.getById(id));

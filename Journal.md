@@ -29,13 +29,13 @@ Jeanne:
 
 | Tasks completed | Hours | Notes |
 |------|------|-------|
-|Created Project structure  and hibernate configuration files, db, hibernate, log and test dependencies| 2.5| Directories created as package were not working at first due to presence of - in package name|
-|Added Problem statement, Project plan and .gitignore| 2.75 ||
+|Created Project structure  and hibernate configuration files, db, hibernate, log and test dependencies| 1.5| Directories created as package were not working at first due to presence of - in package name|
+|Added Problem statement, Project plan and .gitignore| 1.75 ||
 |Created database(db)s both test and development, table and add user with access to db. Configured IntelliJ to connect to db and created Post entity and mapped it to db | 3 ||
 |Added SessionFactory Provider and created Post Dao and  with get all post and add new post functions |||
 |Created Application class that adds resources, add Blg Resource with Get pots| 1 ||
 |Added functionality of Get all post and Create post methods |4 ||
-|Researched how to integrate swager in Java project and try  to integrate  | 7.5 | It was not easy since there are not many resources that do not use Spring|
+|Researched how to integrate swagger in Java project and try  to integrate  | 6.5 | It was not easy since there are not many resources that do not use Spring|
 
 ## Week 11
 ### Apr 6, 2020
@@ -88,3 +88,11 @@ Yia:
 |------|------|-------|
 |Add unit testing for get by id and delete|3|Most of the time was trying to resolve a connection error amd writing the unit test for deleting.|
 |Update documentations to resources methods and add XML resource method for get by ID|1||
+
+
+Jeanne:
+
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Work on presentation|2.5||
+|update Swagger and GitHub documentation|1.5||

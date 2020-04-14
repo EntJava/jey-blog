@@ -31,9 +31,12 @@ import static org.junit.Assert.*;
 public class BlogPostResourceTest extends JerseyTest {
 
     private WebTarget posts;
+    private WebTarget posts404;
     @Before
     public void setUp() {
+
         posts = ClientBuilder.newClient().target("http://localhost:8080/jey-blog/rest-api/posts");
+        posts404 = ClientBuilder.newClient().target("http://localhost:8080/jey-blog/restapi/posts");
     }
     @Override
     protected Application configure() {
@@ -60,12 +63,11 @@ public class BlogPostResourceTest extends JerseyTest {
     @Test
     public void testFetchAllWith404Error() {
         BlogResource resource =  new BlogResource();
-        Response response = posts.request().get();
+        Response response = posts404.request().get();
         assertEquals("should return status 404", 404, response.getStatus());
         System.out.println( response);
         System.out.println(response.readEntity(String.class));
     }
-
 
     /**
      * Test create post.
@@ -82,13 +84,13 @@ public class BlogPostResourceTest extends JerseyTest {
         newPost.setAuthor("Anne Marie");
         newPost.setCategory("Programming");
         newPost.setDescription("This is working!!!!!!!!");
-            Entity<Post> postEntity = Entity.entity(newPost, MediaType.APPLICATION_JSON);
-        String post = objectMapper.writeValueAsString(postEntity);
-            Response response = posts.request().post(Entity.json(post)); //Here we send POST request
+//            Entity<Post> postEntity = Entity.entity(newPost, MediaType.APPLICATION_JSON);
+//        String post = objectMapper.writeValueAsString(postEntity);
+            Response response = posts.request(MediaType.APPLICATION_JSON).post(Entity.entity(newPost,MediaType.APPLICATION_JSON)); //Here we send POST request
         log.error(response);
-        assertNotNull("Should return post list", response.getEntity().toString());
+
         assertEquals("Should return status 400", 400, response.getStatus());
-        System.out.println(response.getEntity());
+        System.out.println(response.readEntity(String.class));
     }
 
     /**
@@ -110,9 +112,10 @@ public class BlogPostResourceTest extends JerseyTest {
      */
     @Test
     public void testDeletePostByID() {
-        posts = posts.path("/delete/1");
+        posts = posts.path("/delete/15");
         Response response = posts.request().delete();
         assertEquals("Should return status 200", 200, response.getStatus());
+        assertNull(posts.path("/15").request().get());
         System.out.println(response.readEntity(String.class));
     }
 }
