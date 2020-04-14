@@ -13,9 +13,7 @@ Yia:
 
 | Tasks completed | Hours | Notes |
 |------|------|-------|
-|Created Project|||
-||||
-||||
+|Initial meeting with team|1||
 
 Estefanie: 
 
@@ -53,6 +51,40 @@ Jeanne:
 |Added Endpoints and Post attributes to the readme| .5||
 |Meeting and competed log| 2.25 ||
 
+Yia:
+
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Add GenericDao method for get by ID and save or update|.5||
+|Add DAO test method for get by ID and save or update|.5||
+
+### Apr 7, 2020
+### Completed tasks:
+### Completed tasks and Time:
+
+Yia:
+
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Add remaining GenericDao method and unit test methods|1|Also ensure all test past|
+|Add resource methods for get by id method and update post|1.5||
+
 ## Week 12
+#### Apr 12, 2020
+#### Completed tasks:
+
+Yia:
+
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Update resource methods for get by id method and add delete method|3|The majority of the time is spend researching how to delete. I was stuck on this for a bit until I started using Postman to try to delete|
+
 #### Apr 13, 2020
 #### Completed tasks:
+
+Yia:
+
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Add unit testing for get by id and delete|3|Most of the time was trying to resolve a connection error amd writing the unit test for deleting.|
+|Update documentations to resources methods and add XML resource method for get by ID|1||
