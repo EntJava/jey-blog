@@ -19,8 +19,8 @@ Estefanie:
 
 | Tasks completed | Hours | Notes |
 |------|------|-------|
-|Created Project|||
-||||
+|Created Repository and push to Github | 1 hour||
+|Research REST APIS| 2 hours||
 ||||
 ## Week 10
 ### Mar 30 , 2020
@@ -58,6 +58,12 @@ Yia:
 |Add GenericDao method for get by ID and save or update|.5||
 |Add DAO test method for get by ID and save or update|.5||
 
+Estefanie
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Implement PUT request| 4 hour| Required some research on how PUT requests works and downloaded Insomnia to aid with the testing|
+||||
+
 ### Apr 7, 2020
 ### Completed tasks:
 ### Completed tasks and Time:
@@ -82,6 +88,16 @@ Yia:
 #### Apr 13, 2020
 #### Completed tasks:
 
+Estefanie
+| Tasks completed | Hours | Notes |
+|------|------|-------|
+|Modify PUT request add swagger documentation that Jeanne implemented| 1 hour| |
+| Add an xml endpoint for a put request | 2 hours| I kept having configuration issues  in my pom.xml file that were giving me a hard time|
+| Add getByColumnName and unit test to GenericDao | 1 hours| |
+| Added xml endpoints for all other requests except POST | 5 hours| I had a hard time getting the lists of entities to return in the Response object. I ended up wrapping the list in an generic entity|
+| Deploy to AWS | 3 hours| I was able to deploy easily but had some configuration issues. I had to reconfigure swagger to work on AWS and was getting exceptions when trying to access the REST endpoints. After a bunch of running around all I ended up needing to do was restart tomcat|
+| Add some error handling to the endpoints | 1 hours| |
+
 Yia:
 
 | Tasks completed | Hours | Notes |
@@ -96,3 +112,4 @@ Jeanne:
 |------|------|-------|
 |Work on presentation|2.5||
 |update Swagger and GitHub documentation|1.5||
+

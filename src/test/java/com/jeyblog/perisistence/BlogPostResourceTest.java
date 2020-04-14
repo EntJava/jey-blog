@@ -118,4 +118,5 @@ public class BlogPostResourceTest extends JerseyTest {
         assertNull(posts.path("/15").request().get());
         System.out.println(response.readEntity(String.class));
     }
+
 }
