@@ -10,6 +10,7 @@ It is not easy to find a free and simple blog post REST API for developer to con
  The jey-blog application will provide simple CRUD blog-post REST API endpoints to developers to consume while adding blog. 
 ### Supported format for blog post REST API
 * application/json
+* application/xml
 
 ### Supported Blog post Actions and REST API endpoints 
     * GET: 

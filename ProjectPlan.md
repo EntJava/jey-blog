@@ -10,7 +10,7 @@
 - [x] Create REST API Endpoints
 
 ### Week 11
-- [ ] Deploy on AWS 
+- [x] Deploy on AWS 
 - [x] Refactor the application
 - [x] test REST API Endpoint
 - [x] Create documentation
