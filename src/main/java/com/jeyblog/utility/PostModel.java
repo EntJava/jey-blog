@@ -14,7 +14,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Getter
 @Setter
 @XmlRootElement(name = "Post")
-@XmlAccessorType(XmlAccessType.FIELD)
 public class PostModel {
     private String title;
     private String author;
