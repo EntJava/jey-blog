@@ -36,6 +36,7 @@ public class ApplicationServices extends Application {
         beanConfig.setPrettyPrint(true);
     }
 
+
     @Override
     public Set<Class<?>> getClasses() {
         HashSet classes = new HashSet<Class<?>>();

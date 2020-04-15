@@ -1,7 +1,6 @@
 package com.jeyblog.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -10,6 +9,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import javax.persistence.*;
 import javax.xml.bind.annotation.*;
 import java.time.LocalDateTime;
+
 
 /**
  * The type Post.
@@ -45,7 +45,7 @@ public class Post {
 
     @Column(name = "publication_date")
     @EqualsAndHashCode.Exclude
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @XmlElement
     private LocalDateTime pubDate;
 
@@ -56,12 +56,12 @@ public class Post {
     @CreationTimestamp
     @Column(name = "created_at")
     @XmlElement
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime createdAt;
 
     @EqualsAndHashCode.Exclude
     @UpdateTimestamp
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
     @Column(name = "updated_at")
     @XmlElement
     private LocalDateTime updatedAt;
@@ -74,6 +74,7 @@ public class Post {
     }
 
     public Post(String title, String author, String category, String description) {
+        this();
         this.title = title;
         this.author = author;
         this.category = category;

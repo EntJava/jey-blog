@@ -1,11 +1,14 @@
 package com.jeyblog.services;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.jeyblog.entity.Post;
 import com.jeyblog.perisistence.GenericDao;
+import com.jeyblog.utility.PostModel;
 import io.swagger.annotations.*;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.LogManager;
@@ -15,6 +18,8 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.beans.Visibility;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -23,9 +28,10 @@ import java.util.List;
  * Swagger Resources:
  * https://www.youtube.com/watch?v=GKGAkbHe_nw
  * https://www.youtube.com/watch?v=5lQgi-n05F4
+ *
  * @author Jeanne, Yia, Estefanie
  * @version 1.0.0
- * @since 2020-04-12
+ * @since 2020 -04-12
  */
 @Path("/posts")
 @Log4j2
@@ -62,7 +68,8 @@ public class BlogResource {
      * Gets all posts json.
      * Swagger annotations:
      * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
-     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     *
      * @return the all posts as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
@@ -105,8 +112,10 @@ public class BlogResource {
      * Gets all posts xml.
      * Swagger annotations:
      * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
-     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     *
      * @return the all posts as application/xml response
+     * @throws JsonProcessingException the json processing exception
      */
     @GET
     @Path("/xml")
@@ -139,31 +148,70 @@ public class BlogResource {
     @Consumes({MediaType.APPLICATION_JSON})
     @ApiOperation(value = "Add a new Post in JSON format.",
             notes = "The following are required fields to successfully created a new post. " +
-            "title , author, category and description",
-                response = Post.class, responseContainer = "List")
+                    "title , author, category and description",
+            response = Post.class, responseContainer = "List")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
     public Response createPostJSON(
-            @ApiParam(name = "Post Object", value = "A New post to add In JSON Format" ,
-                    required = true) Post post) throws JsonProcessingException {
+            @ApiParam(value = "A New post to add In JSON Format" ,
+                    required = true) PostModel post) throws JsonProcessingException {
+        Post newPost =  new Post(post.getTitle(),post.getAuthor(),post.getCategory(),post.getDescription());
         objectMapper = new ObjectMapper();
-        objectMapper.registerModule(new JavaTimeModule())
-        .configure(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS,false)
-        .enable(SerializationFeature.INDENT_OUTPUT);
-        String postObj = objectMapper.writeValueAsString(blogPostDao.create(post));
-        int id = blogPostDao.create(postObj);
+        objectMapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS,false)
+                .setVisibility(PropertyAccessor.FIELD, JsonAutoDetect.Visibility.ANY);
+        String postObj = "Post Added Successfully with ID: ";
+        postObj += objectMapper.writeValueAsString(blogPostDao.create(newPost));
         log.error("Post: " + postObj);
-        if (Response.status(200).equals(200)) {
-            return Response.status(200).entity("Post Added Successfully with ID: " + id).build();
+        if (Response.status(400).equals(400)) {
+            return Response.status(400).entity(postObj).build();
         } else if (Response.serverError().equals(500)) {
-           return Response.status(500).entity("Internal Server Error Occurred!").build();
+            return Response.status(500).entity("Internal Server Error Occurred!").build();
         } else {
-          return  Response.noContent().entity(Response.serverError()).build();
+            return  Response.noContent().entity(Response.serverError()).build();
         }
     }
+
+
+    /**
+     * Create post form response.
+     *
+     * @param title       the title
+     * @param author      the author
+     * @param category    the category
+     * @param description the description
+     * @return the response
+     * @throws JsonProcessingException the json processing exception
+     */
+    @ApiOperation(value = "Add a new Post in JSON format.",
+            notes = "The following are required fields to successfully created a new post. " +
+                    "title , author, category and description",
+            response = Post.class, responseContainer = "List")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400, message = "Bad Request, Bad data format!"),
+            @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    @POST
+    @Path("/form")
+    @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+    public Response createPostForm(@FormParam("title") String title,
+                                   @FormParam("author") String author,
+                                @FormParam("category") String category,
+                                @FormParam("description") String description) throws JsonProcessingException {
+        objectMapper = new ObjectMapper();
+
+        String output = "Post Added Successfully with ID: ";
+
+        Post post = new Post(title, author,category, description);
+        output += blogPostDao.create(post);
+
+        return Response.status(200).entity(objectMapper.writeValueAsString(output)).build();
+    }
+
 
     /**
      * Create post xml response.
@@ -187,7 +235,6 @@ public class BlogResource {
         int postID =  blogPostDao.create(post);
         return Response.status(200).entity("Success fully added a new post with ID : " + postID).build();
     }
-
 
 
     /**
@@ -261,7 +308,10 @@ public class BlogResource {
      * Updates the post description then returns the updated post as JSON
      * Swagger annotations:
      * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
-     *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     * https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     *
+     * @param id          the id
+     * @param description the description
      * @return the all posts as application/json response
      */
     @PUT
@@ -282,7 +332,6 @@ public class BlogResource {
             Post post = (Post)blogPostDao.getById(id);
             post.setDescription(description);
             blogPostDao.saveOrUpdate(post);
-
             objectMapper =  new ObjectMapper();
             objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
             String update = objectMapper.writeValueAsString(post);
@@ -296,16 +345,20 @@ public class BlogResource {
             return Response.status(500).build();
         }
     }
-        /**
-         * Method handling HTTP PUT requests. The returned object will be sent
-         * to the client as "application/xml" media type.
-         * Updates the post description then returns the updated post as XML
-         * Swagger annotations:
-         * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
-         *https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
-         * @return the all posts as application/json response
-         */
-        @PUT
+
+    /**
+     * Method handling HTTP PUT requests. The returned object will be sent
+     * to the client as "application/xml" media type.
+     * Updates the post description then returns the updated post as XML
+     * Swagger annotations:
+     * https://github.com/swagger-api/swagger-core/wiki/Annotations-1.5.X
+     * https://github.com/swagger-api/swagger-core/wiki/Swagger-2.X---Integration-and-configuration
+     *
+     * @param id          the id
+     * @param description the description
+     * @return the all posts as application/json response
+     */
+    @PUT
         @Path("xml/{id}/{description}")
         @Produces({MediaType.APPLICATION_XML})
         @Consumes({MediaType.APPLICATION_XML})
@@ -333,7 +386,7 @@ public class BlogResource {
     /**
      * This method retrieve a list of posts with an "application/json" media type.
      *
-     * @param category
+     * @param category the category
      * @return the post as application/json response
      * @throws JsonProcessingException the json processing exception https://www.logicbig.com/tutorials/java-ee-tutorial/jax-rs/post-example.html
      */
@@ -370,7 +423,7 @@ public class BlogResource {
     /**
      * This method retrieve a list of posts of a specified category with an "application/xml" media type.
      *
-     * @param category
+     * @param category the category
      * @return the post as application/json response
      */
     @GET
@@ -395,6 +448,25 @@ public class BlogResource {
         }
     }
 
+
+    @DELETE
+    @Path("/delete-json/{id}")
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes({MediaType.APPLICATION_JSON})
+    @ApiOperation(value = "Deletes an existing post in JSON Format",
+    notes = "Pass the Id of the object you want yo remove.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 404,message = "Data Not found"),
+            @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    public Response deletePost(@ApiParam(value = "The Post Id") @PathParam("id") int id) throws JsonProcessingException {
+        List<Post> postList = blogPostDao.getAll();
+        objectMapper = new ObjectMapper();
+        blogPostDao.delete(blogPostDao.getById(id));
+        String output = "Post ID " + id + " was successfully deleted.";
+        return Response.status(200).entity(objectMapper.writeValueAsString(output)).build();
+    }
     /**
      * This method delete a post from the server.
      *
@@ -402,21 +474,49 @@ public class BlogResource {
      * @return the success message
      */
     @DELETE
-    @Path("/delete/{id}")
-    @Produces({MediaType.APPLICATION_JSON})
-    @Consumes({MediaType.APPLICATION_JSON})
-    @ApiOperation(value = "Deletes an existing post in JSON Format",
+    @Path("/{id}/delete/")
+    @Produces(MediaType.TEXT_PLAIN)
+    @Consumes(MediaType.TEXT_PLAIN)
+    @ApiOperation(value = "Deletes an existing post in Plain text Format",
     notes = "Pass the Id of the object you want yo remove.")
     @ApiResponses({
             @ApiResponse(code = 200, message = "Success"),
             @ApiResponse(code = 400,message = "Data formatting error"),
             @ApiResponse(code = 500, message = "Internal Server Error!")
     })
-    public Response deletePost(@ApiParam(name = "The Post Id")
+    public Response deletePostPlainText(@ApiParam(value = "The Post Id")
                                    @PathParam("id") int id) {
         try
         {
-            blogPostDao.delete(blogPostDao.getById(id));
+            Post post = (Post)blogPostDao.getById(id);
+
+            log.error(post + " Test Delete form");
+            System.out.println(post);
+
+            blogPostDao.delete(post);
+            String output = "Post ID " + id + " was successfully deleted.";
+            return Response.status(200).entity(output).build();
+        } catch (Exception ex) {
+            logger.error("Post ID: " + id, ex);
+            return Response.status(500).build();
+        }
+    }
+    @DELETE
+    @Path("/form-delete/{postId}/")
+    @Produces({MediaType.APPLICATION_XML})
+    @Consumes({MediaType.APPLICATION_FORM_URLENCODED})
+    @ApiOperation(value = "Deletes an existing post in Form Format",
+            notes = "Pass the Id of the object you want yo remove.")
+    @ApiResponses({
+            @ApiResponse(code = 200, message = "Success"),
+            @ApiResponse(code = 400,message = "Data formatting error"),
+            @ApiResponse(code = 500, message = "Internal Server Error!")
+    })
+    public Response deletePostForm(@ApiParam(value ="The Post Id")
+                               @FormParam("postId") String id) {
+        try
+        {
+            blogPostDao.delete(blogPostDao.getById(Integer.parseInt(id)));
             String output = "Post ID " + id + " was successfully deleted.";
             return Response.status(200).entity(output).build();
         } catch (Exception ex) {
